@@ -1,2 +1,15 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/HLEvEf24)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=23090530&assignment_repo_type=AssignmentRepo)
+EBU5315
+Group Number: 2526EBU5315G31 小组编号：2526EBU5315G31
+Project Title: XXXXXXXXXXXXXXXX 项目标题：XXXXXXXXXXXXXXXX
+Members:Wang Ciyue ,Ye Tong,Jia Yuehan  成员：王慈悦，叶彤，贾月涵
+Name, BUPT Student Number, QM Student Number, Email
+王慈悦 2024213552 241118500 rainsing1005@qq.com
+
+Name, BUPT Student Number, QM Student Number, Email
+姓名、北邮学号、QM学号、邮箱
+
+Name, BUPT Student Number, QM Student Number, Email
+姓名、北邮学号、QM学号、邮箱
+
+
+Assigned TA: Yuwoooo 指定助教：Yuwoooo
