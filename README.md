@@ -5,8 +5,7 @@ Members:Wang Ciyue ,Ye Tong,Jia Yuehan  成员：王慈悦，叶彤，贾月涵
 
 王慈悦 2024213552 241118500 rainsing1005@qq.com
 
-Name, BUPT Student Number, QM Student Number, Email
-叶彤 北邮学号、QM学号、邮箱
+叶彤 2-24213578 241117972 3856176278@qq.com
 
 Name, BUPT Student Number, QM Student Number, Email
 贾月涵 北邮学号、QM学号、邮箱
