@@ -8,5 +8,5 @@ Members:Wang Ciyue ,Ye Tong,Jia Yuehan  成员：王慈悦，叶彤，贾月涵
 叶彤 2024213578 241117972 3856176278@qq.com
 
 Name, BUPT Student Number, QM Student Number, Email
-贾月涵 北邮学号、QM学号、邮箱
+贾月涵 2024213602 241118153 jp2024213602@qmul.ac.uk
 Assigned TA: Yuwoooo 指定助教：Yuwoooo
