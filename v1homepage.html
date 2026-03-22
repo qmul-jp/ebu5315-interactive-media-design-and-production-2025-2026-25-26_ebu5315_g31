@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CircleMaster | 圆定理交互学习平台</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafc;
+            color: #1f2937;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.2s;
+        }
+
+        /* 深色模式 */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .contact-form,
+        body.dark-mode .slider-container,
+        body.dark-mode .ads-banner,
+        body.dark-mode .ai-chatbot-card,
+        body.dark-mode .modal-content {
+            background-color: #1e1e2f;
+            color: #e0e0e0;
+            border-color: #333;
+        }
+
+        body.dark-mode .site-header,
+        body.dark-mode .breadcrumb-wrapper,
+        body.dark-mode footer,
+        body.dark-mode .top-toolbar {
+            background-color: #0a0a0f;
+            border-bottom-color: #2d2d3a;
+        }
+
+        /* 色盲友好模式 (高对比度 + 避免红绿混淆) */
+        body.colorblind-friendly {
+            filter: contrast(1.1) saturate(0.85);
+            background-color: #fef7e0;
+        }
+        body.colorblind-friendly .card,
+        body.colorblind-friendly .contact-form,
+        body.colorblind-friendly .slider-container,
+        body.colorblind-friendly .ai-chatbot-card {
+            background-color: #fff5e0;
+            border-color: #d4b87a;
+        }
+        body.colorblind-friendly .btn-primary,
+        body.colorblind-friendly .auth-btn,
+        body.colorblind-friendly .ai-input-group button {
+            background-color: #2c5f8a;
+        }
+        body.colorblind-friendly .tool-btn {
+            background-color: #e9e2c7;
+        }
+        /* 深色模式下叠加色盲友好 */
+        body.dark-mode.colorblind-friendly {
+            filter: contrast(1.1) saturate(0.85);
+            background-color: #1e1a10;
+        }
+        body.dark-mode.colorblind-friendly .card,
+        body.dark-mode.colorblind-friendly .contact-form,
+        body.dark-mode.colorblind-friendly .slider-container,
+        body.dark-mode.colorblind-friendly .ai-chatbot-card {
+            background-color: #2a2418;
+            border-color: #6b5a3a;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 顶部工具栏 */
+        .top-toolbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            transition: background 0.3s;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .tool-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #1e293b;
+        }
+
+        body.dark-mode .tool-btn {
+            background: #2d2d3a;
+            color: #e2e8f0;
+        }
+
+        .tool-btn:hover {
+            background: #e2e8f0;
+            transform: scale(0.97);
+        }
+
+        /* 头部 */
+        .site-header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 16px 0;
+            transition: background 0.3s;
+        }
+
+        .site-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-link {
+            font-size: 1.7rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: color 0.2s;
+        }
+
+        body.dark-mode .main-nav a {
+            color: #cbd5e1;
+        }
+
+        .main-nav a.active,
+        .main-nav a:hover {
+            color: #3b82f6;
+        }
+
+        .auth-btn {
+            background: #3b82f6;
+            color: white !important;
+            padding: 6px 16px;
+            border-radius: 40px;
+            transition: 0.2s;
+        }
+
+        .auth-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* 面包屑 */
+        .breadcrumb-wrapper {
+            background: #f8fafc;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb a {
+            text-decoration: none;
+            color: #3b82f6;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hero-text h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: #4b5563;
+        }
+
+        .hero-selling {
+            font-weight: 500;
+            background: #eef2ff;
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 40px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* 定理卡片 */
+        .theorems-cards {
+            padding: 40px 0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px 20px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: 0.2s;
+            border: 1px solid #eef2ff;
+        }
+
+        .card-icon i {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            margin-bottom: 16px;
+        }
+
+        /* 幻灯片 */
+        .watch-learn {
+            padding: 40px 0;
+        }
+
+        .slider-container {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-top: 28px;
+        }
+
+        .slider {
+            position: relative;
+            min-height: 240px;
+        }
+
+        .slide {
+            display: none;
+            text-align: center;
+            animation: fade 0.4s ease;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-graphic i {
+            font-size: 4rem;
+            color: #3b82f6;
+            margin-bottom: 16px;
+        }
+
+        .slide-caption {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 12px 0 6px;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .slider-btn {
+            background: #eef2ff;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .slide-dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #3b82f6;
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        .subtitle-track {
+            margin-top: 20px;
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 32px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* 广告条 */
+        .ads-banner {
+            background: linear-gradient(90deg, #fef9c3, #fde047);
+            padding: 16px 0;
+            margin: 30px 0 20px;
+            border-radius: 60px;
+        }
+
+        body.dark-mode .ads-banner {
+            background: linear-gradient(90deg, #2b2b1f, #5e5a2a);
+        }
+
+        .ads-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ad-btn {
+            background: black;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* AI助手卡片 */
+        .ai-assistant-section {
+            padding: 20px 0 20px;
+        }
+
+        .ai-chatbot-card {
+            background: white;
+            border-radius: 36px;
+            padding: 28px 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            transition: 0.2s;
+            border: 1px solid #eef2ff;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .ai-header i {
+            color: #3b82f6;
+            font-size: 2rem;
+        }
+
+        .chat-messages-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 16px;
+            height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .bot-msg,
+        .user-msg {
+            max-width: 85%;
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-size: 0.9rem;
+        }
+
+        .bot-msg {
+            background: #e6f0ff;
+            align-self: flex-start;
+            color: #1e293b;
+        }
+
+        .user-msg {
+            background: #3b82f6;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .ai-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .ai-input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+        }
+
+        .ai-input-group button {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            border-radius: 60px;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+
+        /* 联系表单 */
+        .contact-section {
+            padding: 20px 0 60px;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 0.8fr;
+            gap: 40px;
+            margin-top: 28px;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 28px;
+            border-radius: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 28px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+        }
+
+        .form-policy {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-secondary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .data-transparency {
+            background: #eef2ff;
+            padding: 20px;
+            border-radius: 28px;
+            font-size: 0.9rem;
+        }
+        .data-transparency p {
+            margin-bottom: 12px;
+        }
+        .data-transparency p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            background: #f1f5f9;
+            padding: 32px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 780px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .top-toolbar {
+                gap: 12px;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .site-header .container {
+                flex-direction: column;
+            }
+        }
+
+        .form-feedback {
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 450px;
+            padding: 28px 24px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .modal-content {
+            background: #1e1e2f;
+            color: #e0e0e0;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #ef4444;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 8px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #64748b;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #3b82f6;
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 28px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .auth-form input {
+            background: #2d2d3a;
+            border-color: #4b5563;
+            color: white;
+        }
+
+        .auth-form button {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .auth-error {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* 底部按钮样式 */
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .colorblind-toggle {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .colorblind-toggle:hover {
+            background: #4b5563;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部工具栏 -->
+<div class="top-toolbar" role="region" aria-label="辅助功能工具条">
+    <div class="tool-group">
+        <button id="decreaseFont" class="tool-btn" aria-label="减小字体"><i class="fas fa-font"></i> A-</button>
+        <button id="resetFont" class="tool-btn" aria-label="重置字体"><i class="fas fa-undo-alt"></i> 默认</button>
+        <button id="increaseFont" class="tool-btn" aria-label="增大字体"><i class="fas fa-font"></i> A+</button>
+    </div>
+    <div class="tool-group">
+        <button id="darkModeToggle" class="tool-btn" aria-label="深色模式"><i class="fas fa-moon"></i> 深色模式</button>
+    </div>
+    <div class="tool-group">
+        <button id="langEn" class="tool-btn lang-btn" data-lang="en">English</button>
+        <button id="langZh" class="tool-btn lang-btn" data-lang="zh">中文</button>
+    </div>
+</div>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo-container">
+            <a href="#" class="logo-link" id="homeLink" aria-label="回到首页">
+                <i class="fas fa-circle-notch"></i>
+                <span data-i18n="site_name">CircleMaster</span>
+            </a>
+        </div>
+        <nav class="main-nav" aria-label="主菜单">
+            <ul>
+                <li><a href="#" class="active" data-i18n="nav_home">首页</a></li>
+                <li><a href="#" id="gameLinkPlaceholder" data-i18n="nav_game">游戏挑战</a></li>
+                <li><a href="#" id="quizLinkPlaceholder" data-i18n="nav_quiz">知识测验</a></li>
+                <li><a href="#" id="authBtn" class="auth-btn" data-i18n="login_register">登录/注册</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="breadcrumb-wrapper">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="#" data-i18n="home_breadcrumb">首页</a></li>
+            <li><span data-i18n="current_breadcrumb">圆定理学习</span></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1 data-i18n="hero_title">Learn Circle Theorems Easily</h1>
+                <p class="hero-sub" data-i18n="hero_subtitle">GCSE Math Interactive Learning And Animation</p>
+                <p class="hero-selling" data-i18n="hero_usp">✨ 互动游戏 | AI智能助手 | 自适应测验 | 动画定理演示 ✨</p>
+                <button id="startLearningBtn" class="btn-primary cta-btn" data-i18n="start_btn">开始学习</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="theorems-cards">
+        <div class="container">
+            <h2 id="theorems-heading" data-i18n="main_theorems_title">📐 主要圆定理</h2>
+            <div class="cards-grid">
+                <div class="card theorem-card">
+                    <div class="card-icon"><i class="fas fa-angles-right"></i></div>
+                    <h3 data-i18n="th1_title">圆周角定理</h3>
+                    <p data-i18n="th1_desc">同弧所对的圆周角相等，且等于圆心角的一半。</p>
+                </div>
+                <div class="card theorem-card">
+                    <div class="card-icon"><i class="fas fa-circle-dot"></i></div>
+                    <h3 data-i18n="th2_title">直径所对圆周角</h3>
+                    <p data-i18n="th2_desc">直径所对的圆周角是直角（90°）。</p>
+                </div>
+                <div class="card theorem-card">
+                    <div class="card-icon"><i class="fas fa-chord"></i></div>
+                    <h3 data-i18n="th3_title">圆内接四边形</h3>
+                    <p data-i18n="th3_desc">圆内接四边形对角互补，外角等于内对角。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="watch-learn">
+        <div class="container">
+            <h2 data-i18n="watch_title">🎬 Watch & Learn | 动画演示</h2>
+            <div class="slider-container">
+                <div class="slider" id="theoremSlider">
+                    <div class="slide active">
+                        <div class="slide-graphic"><i class="fas fa-chalkboard-user"></i></div>
+                        <div class="slide-caption" data-i18n="slide1_caption">定理1：圆周角 = 圆心角的一半 (同弧)</div>
+                        <div class="slide-sub" data-i18n="slide1_detail">∠APB = ½ ∠AOB，点P在圆上同弧AB。</div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-graphic"><i class="fas fa-chart-line"></i></div>
+                        <div class="slide-caption" data-i18n="slide2_caption">定理2：直径所对的圆周角 = 90°</div>
+                        <div class="slide-sub" data-i18n="slide2_detail">若AB为直径，则∠ACB = 90°。</div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-graphic"><i class="fas fa-shapes"></i></div>
+                        <div class="slide-caption" data-i18n="slide3_caption">定理3：圆内接四边形对角互补</div>
+                        <div class="slide-sub" data-i18n="slide3_detail">∠A + ∠C = 180°, ∠B + ∠D = 180°。</div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slide-dots" id="slideDots"></div>
+                    <button class="slider-btn next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="subtitle-track" aria-live="polite">
+                    <span id="liveSubtitle" data-i18n="slide1_caption">定理1：圆周角 = 圆心角的一半 (同弧)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="ads-banner">
+        <div class="container ads-content">
+            <i class="fas fa-ad"></i>
+            <span data-i18n="ad_text">🌟 限时特惠：购买高级几何学习包，解锁全部挑战！ 🌟</span>
+            <button class="ad-btn" data-i18n="ad_btn">立即抢购</button>
+        </div>
+    </div>
+
+    <section class="ai-assistant-section">
+        <div class="container">
+            <div class="ai-chatbot-card" id="aiAssistantCard">
+                <div class="ai-header">
+                    <i class="fas fa-robot"></i>
+                    <span data-i18n="ai_greeting">✨ AI 学习助手 | 随时解答圆定理问题 ✨</span>
+                </div>
+                <div class="chat-messages-card" id="aiChatMessages">
+                    <div class="bot-msg">👋 嗨！我是你的几何AI教练，问我任何圆定理相关的问题，例如：“圆周角定理是什么？” 或 “帮我出一道练习题”</div>
+                </div>
+                <div class="ai-input-group">
+                    <input type="text" id="aiUserInput" placeholder="输入你的问题..." aria-label="向AI提问">
+                    <button id="aiSendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
+                </div>
+                <p class="form-feedback" style="font-size:12px; margin-top:8px;" data-i18n="ai_disclaimer">💡 AI演示：基于规则+互动反馈辅助学习</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            <h2 data-i18n="contact_title">📬 联系我们</h2>
+            <div class="contact-wrapper">
+                <form id="contactForm" class="contact-form" novalidate>
+                    <div class="form-group">
+                        <label for="name" data-i18n="form_name">姓名</label>
+                        <input type="text" id="name" placeholder="Your name / 您的姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-i18n="form_email">电子邮箱</label>
+                        <input type="email" id="email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" data-i18n="form_message">留言内容</label>
+                        <textarea id="message" rows="4" placeholder="Tell us your learning journey..." required></textarea>
+                    </div>
+                    <div class="form-policy">
+                        <input type="checkbox" id="policyConsent" required>
+                        <label for="policyConsent" data-i18n="policy_consent">我已阅读并同意<strong data-i18n="policy_link">数据隐私政策</strong>（演示用途）</label>
+                    </div>
+                    <button type="submit" class="btn-secondary" data-i18n="submit_btn">提交信息</button>
+                    <p id="formFeedback" class="form-feedback"></p>
+                </form>
+                <div class="data-transparency" id="dataPolicyBox">
+                    <p><i class="fas fa-shield-alt"></i> <span data-i18n="data_policy_text">透明数据政策：我们仅收集姓名邮箱用于回复咨询，绝不向第三方出售。所有数据仅作模拟演示，符合伦理与隐私保护。</span></p>
+                    <p><span data-i18n="colorblind_notice">🎨 本网站对于色觉障碍人士友好，请点击页面底部按钮进行颜色转换。</span></p>
+                    <p><span data-i18n="contact_opt_notice">📧 联系我们所收集到的信息仅作为系统优化建议使用，请不要担心信息泄露，感谢您的建议！</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p data-i18n="footer_copyright">© 2026 CircleMaster | 几何交互学习 | 包容性设计 | GCSE圆定理</p>
+        <p data-i18n="footer_ethical">♿ 无障碍设计：色盲友好配色 | 可调字体 | 字幕支持 | 中英双语 | 暗色模式</p>
+        <div class="footer-buttons">
+            <button id="colorblindToggleBtn" class="colorblind-toggle" data-i18n="colorblind_btn">🌈 色盲友好模式 / Colorblind Mode</button>
+        </div>
+    </div>
+</footer>
+
+<!-- 登录/注册模态框 -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 data-i18n="modal_title">账户访问</h3>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="login" data-i18n="login_tab">登录</button>
+            <button class="tab-btn" data-tab="register" data-i18n="register_tab">注册</button>
+        </div>
+        <div id="loginPane" class="tab-pane active">
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="电子邮箱" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="密码" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%" data-i18n="login_btn">登录</button>
+                <span id="loginError" class="auth-error"></span>
+            </form>
+        </div>
+        <div id="registerPane" class="tab-pane">
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <input type="text" id="regName" placeholder="用户名" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="regEmail" placeholder="电子邮箱" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPassword" placeholder="密码 (至少6位)" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regConfirm" placeholder="确认密码" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%" data-i18n="register_btn">注册新账户</button>
+                <span id="registerError" class="auth-error"></span>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- 语言包 (增加新文本) ----------
+    let currentLang = 'zh';
+    const translations = {
+        en: {
+            site_name: "CircleMaster", nav_home: "Home", nav_game: "Games", nav_quiz: "Quiz", login_register: "Login/Register",
+            home_breadcrumb: "Home", current_breadcrumb: "Circle Theorems",
+            hero_title: "Learn Circle Theorems Easily", hero_subtitle: "GCSE Math Interactive Learning And Animation",
+            hero_usp: "✨ Interactive Games | AI Assistant | Adaptive Quiz | Animated Theorems ✨",
+            start_btn: "Start Learning", main_theorems_title: "📐 Main Circle Theorems",
+            th1_title: "Inscribed Angle Theorem", th1_desc: "Angles subtended by the same arc are equal, half the central angle.",
+            th2_title: "Thales' Theorem", th2_desc: "Angle subtended by a diameter is a right angle (90°).",
+            th3_title: "Cyclic Quadrilateral", th3_desc: "Opposite angles sum to 180°.",
+            watch_title: "🎬 Watch & Learn",
+            slide1_caption: "Theorem 1: Inscribed Angle = ½ Central Angle", slide1_detail: "∠APB = ½ ∠AOB",
+            slide2_caption: "Theorem 2: Angle in a semicircle = 90°", slide2_detail: "If AB is diameter, ∠ACB = 90°",
+            slide3_caption: "Theorem 3: Cyclic Quadrilateral", slide3_detail: "∠A+∠C=180°, ∠B+∠D=180°",
+            ad_text: "🌟 Special Offer: Get Premium Geometry Pack! 🌟", ad_btn: "Buy Now",
+            ai_greeting: "✨ AI Tutor | Ask me about circle theorems ✨", ai_disclaimer: "💡 AI Demo: rule-based interactive learning assistant",
+            contact_title: "📬 Contact Us", form_name: "Name", form_email: "Email", form_message: "Message",
+            policy_consent: "I agree to the ", policy_link: "Data Privacy Policy", submit_btn: "Submit",
+            data_policy_text: "Transparent Data Policy: We collect name/email for inquiry responses only, not shared.",
+            footer_copyright: "© 2026 CircleMaster | Geometry Learning | Inclusive Design",
+            footer_ethical: "♿ Accessibility: Color-blind friendly | Adjustable fonts | Subtitles | Bilingual | Dark Mode",
+            modal_title: "Account Access", login_tab: "Login", register_tab: "Register", login_btn: "Sign In", register_btn: "Create Account",
+            colorblind_notice: "🎨 This website is friendly to color-blind users. Please click the button at the bottom to switch color schemes.",
+            contact_opt_notice: "📧 The information collected in 'Contact Us' is only used for system optimization suggestions. Rest assured, your privacy is protected. Thank you for your feedback!",
+            colorblind_btn: "🌈 Colorblind Friendly Mode"
+        },
+        zh: {
+            site_name: "CircleMaster", nav_home: "首页", nav_game: "游戏挑战", nav_quiz: "知识测验", login_register: "登录/注册",
+            home_breadcrumb: "首页", current_breadcrumb: "圆定理学习",
+            hero_title: "轻松学会圆定理", hero_subtitle: "GCSE数学 交互式学习与动画",
+            hero_usp: "✨ 互动游戏 | AI助手 | 自适应测验 | 动画定理 ✨",
+            start_btn: "开始学习", main_theorems_title: "📐 主要圆定理",
+            th1_title: "圆周角定理", th1_desc: "同弧所对的圆周角相等，且等于圆心角的一半。",
+            th2_title: "直径所对圆周角", th2_desc: "直径所对的圆周角是直角（90°）。",
+            th3_title: "圆内接四边形", th3_desc: "圆内接四边形对角互补。",
+            watch_title: "🎬 动画演示",
+            slide1_caption: "定理1：圆周角 = 圆心角的一半", slide1_detail: "∠APB = ½ ∠AOB",
+            slide2_caption: "定理2：直径所对的圆周角 = 90°", slide2_detail: "若AB为直径，∠ACB = 90°",
+            slide3_caption: "定理3：圆内接四边形对角互补", slide3_detail: "∠A+∠C=180°, ∠B+∠D=180°",
+            ad_text: "🌟 限时特惠：购买高级几何学习包，解锁全部挑战！ 🌟", ad_btn: "立即抢购",
+            ai_greeting: "✨ AI学习助手 | 随时解答圆定理问题 ✨", ai_disclaimer: "💡 AI演示：基于规则+互动反馈辅助学习",
+            contact_title: "📬 联系我们", form_name: "姓名", form_email: "电子邮箱", form_message: "留言内容",
+            policy_consent: "我已阅读并同意", policy_link: "数据隐私政策", submit_btn: "提交信息",
+            data_policy_text: "透明数据政策：我们仅收集姓名邮箱用于回复咨询，绝不向第三方出售。所有数据仅作模拟演示，符合伦理与隐私保护。",
+            footer_copyright: "© 2026 CircleMaster | 几何学习 | 包容性设计",
+            footer_ethical: "♿ 无障碍：色盲友好配色 | 可调字体 | 字幕 | 双语 | 深色模式",
+            modal_title: "账户访问", login_tab: "登录", register_tab: "注册", login_btn: "登录", register_btn: "注册新账户",
+            colorblind_notice: "🎨 本网站对于色觉障碍人士友好，请点击页面底部按钮进行颜色转换。",
+            contact_opt_notice: "📧 联系我们所收集到的信息仅作为系统优化建议使用，请不要担心信息泄露，感谢您的建议！",
+            colorblind_btn: "🌈 色盲友好模式"
+        }
+    };
+    function updateLanguage() {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            let key = el.getAttribute('data-i18n');
+            if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
+        });
+        // 手动处理 dataPolicyBox 内的三个独立段落（因包含额外html结构）
+        const policyTextP = document.querySelector('#dataPolicyBox p:first-child span[data-i18n="data_policy_text"]');
+        const colorblindP = document.querySelector('#dataPolicyBox p:nth-child(2) span[data-i18n="colorblind_notice"]');
+        const contactOptP = document.querySelector('#dataPolicyBox p:nth-child(3) span[data-i18n="contact_opt_notice"]');
+        if(policyTextP) policyTextP.innerText = translations[currentLang].data_policy_text;
+        if(colorblindP) colorblindP.innerText = translations[currentLang].colorblind_notice;
+        if(contactOptP) contactOptP.innerText = translations[currentLang].contact_opt_notice;
+    }
+    document.getElementById('langEn').onclick = () => { currentLang = 'en'; updateLanguage(); };
+    document.getElementById('langZh').onclick = () => { currentLang = 'zh'; updateLanguage(); };
+    updateLanguage();
+
+    // 字体大小 & 深色模式
+    let currentFontSize = 16;
+    function setBodyFontSize(size) { document.body.style.fontSize = size + 'px'; }
+    document.getElementById('increaseFont').onclick = () => { currentFontSize = Math.min(22, currentFontSize+2); setBodyFontSize(currentFontSize); };
+    document.getElementById('decreaseFont').onclick = () => { currentFontSize = Math.max(12, currentFontSize-2); setBodyFontSize(currentFontSize); };
+    document.getElementById('resetFont').onclick = () => { currentFontSize = 16; setBodyFontSize(16); };
+    document.getElementById('darkModeToggle').onclick = () => { document.body.classList.toggle('dark-mode'); };
+
+    // 色盲友好模式切换
+    const colorblindBtn = document.getElementById('colorblindToggleBtn');
+    colorblindBtn.onclick = () => {
+        document.body.classList.toggle('colorblind-friendly');
+        const isActive = document.body.classList.contains('colorblind-friendly');
+        colorblindBtn.style.background = isActive ? '#2b6e3c' : '#6b7280';
+        setTimeout(() => { colorblindBtn.style.background = ''; }, 300);
+    };
+
+    // 幻灯片逻辑
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('slideDots');
+    let currentSlide = 0;
+    function updateSlide(index) {
+        slides.forEach((s,i)=> s.classList.toggle('active', i===index));
+        document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===index));
+        const subText = slides[index].querySelector('.slide-caption')?.innerText || '';
+        document.getElementById('liveSubtitle').innerText = subText;
+        currentSlide = index;
+    }
+    function createDots() {
+        slides.forEach((_,i)=>{
+            let dot = document.createElement('div');
+            dot.classList.add('dot');
+            if(i===0) dot.classList.add('active');
+            dot.addEventListener('click',()=>updateSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+    }
+    document.getElementById('prevSlide').onclick = () => updateSlide((currentSlide-1+slides.length)%slides.length);
+    document.getElementById('nextSlide').onclick = () => updateSlide((currentSlide+1)%slides.length);
+    createDots(); updateSlide(0);
+    setInterval(()=> updateSlide((currentSlide+1)%slides.length), 6000);
+
+    // AI助手
+    const aiChatDiv = document.getElementById('aiChatMessages');
+    const aiInput = document.getElementById('aiUserInput');
+    const aiSend = document.getElementById('aiSendBtn');
+    function addAIMessage(text, isUser = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
+        msgDiv.innerText = text;
+        aiChatDiv.appendChild(msgDiv);
+        aiChatDiv.scrollTop = aiChatDiv.scrollHeight;
+    }
+    function botResponse(query) {
+        const q = query.toLowerCase();
+        if(q.includes('圆周角') || q.includes('inscribed')) return "圆周角定理：同弧所对的圆周角相等，且等于圆心角的一半。";
+        if(q.includes('直径') || q.includes('thales')) return "直径所对的圆周角是90°，称为泰勒斯定理。";
+        if(q.includes('内接四边形') || q.includes('cyclic')) return "圆内接四边形对角互补，外角等于内对角。";
+        if(q.includes('练习') || q.includes('quiz')) return "好的！请问：在圆中，直径所对的角是多少度？(答案:90°)";
+        return "我专注于圆定理～可以问我关于圆周角、圆心角、直径定理或圆内接四边形的问题！";
+    }
+    aiSend.onclick = () => {
+        let msg = aiInput.value.trim();
+        if(!msg) return;
+        addAIMessage(msg, true);
+        setTimeout(()=>{ addAIMessage(botResponse(msg), false); }, 300);
+        aiInput.value = '';
+    };
+    aiInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') aiSend.click(); });
+
+    // 联系表单
+    const contactForm = document.getElementById('contactForm');
+    const feedback = document.getElementById('formFeedback');
+    contactForm.onsubmit = (e) => {
+        e.preventDefault();
+        const consent = document.getElementById('policyConsent').checked;
+        if(!consent) { feedback.innerText = "请同意数据政策后提交。"; return; }
+        feedback.innerText = "✅ 提交成功！我们会尽快回复 (演示模式)";
+        setTimeout(()=>feedback.innerText="", 3000);
+        contactForm.reset();
+    };
+
+    document.getElementById('startLearningBtn').onclick = () => { document.getElementById('aiAssistantCard').scrollIntoView({ behavior: 'smooth' }); };
+    document.getElementById('homeLink').onclick = (e) => { e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); };
+    document.querySelectorAll('#gameLinkPlaceholder, #quizLinkPlaceholder').forEach(btn=>{
+        btn.onclick=(e)=>{ e.preventDefault(); alert("游戏与测验模块将在后续版本推出。首页AI助手已上线！"); };
+    });
+
+    // 登录/注册模态框逻辑
+    const modal = document.getElementById('authModal');
+    const authBtn = document.getElementById('authBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const loginPane = document.getElementById('loginPane');
+    const registerPane = document.getElementById('registerPane');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginError = document.getElementById('loginError');
+    const registerError = document.getElementById('registerError');
+
+    function openModal() { modal.classList.add('show'); }
+    function closeModal() { modal.classList.remove('show'); }
+    authBtn.onclick = (e) => { e.preventDefault(); openModal(); };
+    closeModalBtn.onclick = closeModal;
+    modal.onclick = (e) => { if(e.target === modal) closeModal(); };
+
+    tabBtns.forEach(btn => {
+        btn.onclick = () => {
+            const tab = btn.getAttribute('data-tab');
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if(tab === 'login') {
+                loginPane.classList.add('active');
+                registerPane.classList.remove('active');
+            } else {
+                registerPane.classList.add('active');
+                loginPane.classList.remove('active');
+            }
+            loginError.innerText = '';
+            registerError.innerText = '';
+        };
+    });
+
+    loginForm.onsubmit = (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const pwd = document.getElementById('loginPassword').value.trim();
+        if(!email || !pwd) { loginError.innerText = "请填写邮箱和密码"; return; }
+        if(!email.includes('@')) { loginError.innerText = "请输入有效的邮箱地址"; return; }
+        alert(`演示登录成功！\n欢迎回来，${email}`);
+        closeModal();
+        loginForm.reset();
+    };
+
+    registerForm.onsubmit = (e) => {
+        e.preventDefault();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pwd = document.getElementById('regPassword').value.trim();
+        const confirm = document.getElementById('regConfirm').value.trim();
+        if(!name || !email || !pwd || !confirm) { registerError.innerText = "请填写所有字段"; return; }
+        if(!email.includes('@')) { registerError.innerText = "邮箱格式不正确"; return; }
+        if(pwd.length < 6) { registerError.innerText = "密码长度至少6位"; return; }
+        if(pwd !== confirm) { registerError.innerText = "两次输入的密码不一致"; return; }
+        alert(`演示注册成功！\n用户名: ${name}\n邮箱: ${email}\n您已可以登录。`);
+        closeModal();
+        registerForm.reset();
+        document.querySelector('.tab-btn[data-tab="login"]').click();
+    };
+</script>
+</body>
+</html>
