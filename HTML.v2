@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">圆几何测验 | 初中数学学习网</title>
+    <link rel="stylesheet" href="quiz.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="quiz-header">
+        <div class="breadcrumb" id="breadcrumb">
+            <a href="../index.html" id="breadcrumb-home"></a> &gt; <span id="breadcrumb-quiz"></span>
+        </div>
+        <div class="header-controls">
+            <button id="font-sm" title="" aria-label="缩小字号"><i class="fas fa-text-sm"></i></button>
+            <button id="font-normal" title="" aria-label="默认字号" class="active"><i class="fas fa-text-md"></i></button>
+            <button id="font-lg" title="" aria-label="放大字号"><i class="fas fa-text-lg"></i></button>
+            <button id="theme-toggle" title="" aria-label="切换暗黑模式"><i class="fas fa-moon"></i></button>
+            <button id="lang-zh" class="lang-btn active">中</button>
+            <button id="lang-en" class="lang-btn">En</button>
+        </div>
+    </header>
+
+    <main class="quiz-container">
+        <section id="level-selection" class="page active">
+            <h1 class="page-title" id="level-title"></h1>
+            <div class="rule-card">
+                <h3 id="rule-title"><i class="fas fa-list-alt"></i> </h3>
+                <ul id="rule-list"></ul>
+            </div>
+
+            <div class="level-cards">
+                <div class="level-card" data-level="basic" data-count="10" data-time="600">
+                    <div class="level-badge" id="badge-basic"></div>
+                    <p id="basic-desc"></p>
+                    <p id="basic-info"></p>
+                    <button class="start-quiz-btn" id="start-basic"></button>
+                </div>
+                <div class="level-card" data-level="advanced" data-count="15" data-time="900">
+                    <div class="level-badge" id="badge-advanced"></div>
+                    <p id="advanced-desc"></p>
+                    <p id="advanced-info"></p>
+                    <button class="start-quiz-btn" id="start-advanced"></button>
+                </div>
+                <div class="level-card" data-level="challenge" data-count="20" data-time="1200">
+                    <div class="level-badge" id="badge-challenge"></div>
+                    <p id="challenge-desc"></p>
+                    <p id="challenge-info"></p>
+                    <button class="start-quiz-btn" id="start-challenge"></button>
+                </div>
+            </div>
+
+            <div class="history-card">
+                <h3 id="history-title"><i class="fas fa-history"></i> </h3>
+                <div id="history-list"></div>
+            </div>
+
+            <button id="open-notebook" class="btn-primary">
+                <i class="fas fa-book"></i> <span id="notebook-btn-text"></span>
+            </button>
+        </section>
+
+        <section id="quiz-page" class="page">
+            <div class="quiz-header-bar">
+                <div class="quiz-info">
+                    <span id="quiz-level-name"></span>
+                    <span id="quiz-question-count"></span>
+                </div>
+                <div class="quiz-time" id="countdown">00:00</div>
+                <button id="quit-quiz" class="btn-secondary"><i class="fas fa-sign-out"></i> <span id="quit-btn-text"></span></button>
+            </div>
+
+            <div class="question-card">
+                <h4 id="question-title"></h4>
+                <div id="question-img-container">
+                    <canvas id="question-canvas" width="300" height="200"></canvas>
+                </div>
+                <div id="answer-area"></div>
+                <button id="hint-btn" class="hint-btn"><i class="fas fa-lightbulb"></i> <span id="hint-btn-text"></span></button>
+                <div id="hint-content" class="hint-content"></div>
+                <div id="answer-feedback" class="hint-content" style="display: none;"></div>
+            </div>
+
+            <div class="quiz-nav">
+                <button id="prev-question" class="btn-nav" disabled><i class="fas fa-chevron-left"></i> <span id="prev-btn-text"></span></button>
+                <button id="next-question" class="btn-nav"><i class="fas fa-chevron-right"></i> <span id="next-btn-text"></span></button>
+                <button id="submit-quiz" class="btn-primary"><i class="fas fa-check"></i> <span id="submit-btn-text"></span></button>
+            </div>
+        </section>
+
+        <section id="result-page" class="page">
+            <h1 class="page-title" id="result-title"></h1>
+            <div class="result-card">
+                <div class="score-box">
+                    <span id="total-score">0</span>
+                    <span>/</span>
+                    <span id="full-score">100</span>
+                    <p id="score-text"></p>
+                </div>
+                <div class="star-box" id="star-rating"></div>
+                <p id="result-desc"></p>
+                <p id="wrong-count"></p>
+            </div>
+            <div class="result-btns">
+                <button id="replay-quiz" class="btn-primary"><i class="fas fa-redo"></i> <span id="replay-btn-text"></span></button>
+                <button id="view-wrong" class="btn-secondary"><i class="fas fa-exclamation-circle"></i> <span id="view-wrong-btn-text"></span></button>
+                <button id="back-to-level" class="btn-secondary"><i class="fas fa-home"></i> <span id="back-level-btn-text"></span></button>
+            </div>
+        </section>
+
+        <section id="notebook-page" class="page">
+            <h1 class="page-title" id="notebook-title"><i class="fas fa-book"></i> </h1>
+            <button id="back-from-notebook" class="btn-secondary back-btn"><i class="fas fa-chevron-left"></i> <span id="back-notebook-btn-text"></span></button>
+            <div id="notebook-list"></div>
+        </section>
+    </main>
+
+    <footer class="quiz-footer">
+        <div class="ad-banner" id="ad-text"></div>
+        <div class="copyright" id="copyright-text"></div>
+    </footer>
+
+    <script src="quiz.js"></script>
+</body>
+</html>
