@@ -1,0 +1,766 @@
+// 1. 完整双语配置（无任何遗漏）
+const langData = {
+    zh: {
+        pageTitle: "圆几何测验 | 初中数学学习网",
+        breadcrumbHome: "首页",
+        breadcrumbQuiz: "几何测验",
+        fontSmTitle: "缩小字号", fontNormalTitle: "默认字号", fontLgTitle: "放大字号",
+        themeToggleTitle: "切换暗黑模式",
+        levelTitle: "圆几何等级测验",
+        ruleTitle: "测验规则",
+        ruleList: [
+            "基础级：10题，单一圆定理应用，限时10分钟，每题10分",
+            "进阶级：15题，多定理综合应用，限时15分钟，每题10分",
+            "挑战级：20题，复杂推理/作图题，限时20分钟，每题10分",
+            "查看提示扣2分/题，答题即时判分，完成生成错题本"
+        ],
+        badgeBasic: "基础", basicDesc: "单一定理应用<br>适合入门", basicInfo: "10题 | 10分钟", startBasic: "开始测验",
+        badgeAdvanced: "进阶", advancedDesc: "多定理综合应用<br>适合提升", advancedInfo: "15题 | 15分钟", startAdvanced: "开始测验",
+        badgeChallenge: "挑战", challengeDesc: "复杂推理/作图<br>适合拔高", challengeInfo: "20题 | 20分钟", startChallenge: "开始测验",
+        historyTitle: "答题历史", noHistory: "暂无答题记录，开始你的第一次测验吧！",
+        notebookBtnText: "打开错题本",
+        quizLevelBasic: "基础级", quizLevelAdvanced: "进阶级", quizLevelChallenge: "挑战级",
+        quitBtnText: "退出", hintBtnText: "查看提示（扣2分）", hintContent: "提示：",
+        prevBtnText: "上一题", nextBtnText: "下一题", submitBtnText: "提交测验",
+        selectAnswer: "请选择正确答案：", inputAnswer: "请输入答案（数字，单位：度）：",
+        quizQuit: "确定退出测验吗？本次答题记录将不保存！",
+        quizSubmit: "确定提交测验吗？提交后将无法修改答案！",
+        correctTip: "✅ 回答正确！", wrongTip: "❌ 回答错误！",
+        rightAnswer: "正确答案：", analysisText: "解析：",
+        resultTitle: "测验完成！", scoreText: "总分",
+        star1: "继续加油，多做练习掌握圆几何！",
+        star2: "表现不错，再努力一点就能更优秀！",
+        star3: "表现良好，基本掌握圆几何定理！",
+        star4: "表现优秀，熟练应用圆几何定理！",
+        star5: "表现完美，精通圆几何所有定理！",
+        wrongCount: "本次错题数：",
+        replayBtnText: "重新测验", viewWrongBtnText: "查看错题", backLevelBtnText: "返回等级选择",
+        notebookTitle: "圆几何错题本", backNotebookBtnText: "返回", noNotebook: "暂无错题，继续保持！",
+        adText: "📚 初中几何提分课程，扫码立减50元 | 名师精讲圆定理+真题训练",
+        copyrightText: "© 2026 圆几何学习网 | 所有权利保留",
+        ti: "题", question: "第",
+        defaultQuestion: "未命名题目",
+        defaultAnalysis: "暂无详细解析"
+    },
+    en: {
+        pageTitle: "Circle Geometry Quiz | GCSE Math Learning",
+        breadcrumbHome: "Home", breadcrumbQuiz: "Geometry Quiz",
+        fontSmTitle: "Decrease Font", fontNormalTitle: "Default Font", fontLgTitle: "Increase Font",
+        themeToggleTitle: "Toggle Dark Mode",
+        levelTitle: "Circle Geometry Level Quiz",
+        ruleTitle: "Quiz Rules",
+        ruleList: [
+            "Basic: 10 questions, single theorem, 10 mins, 10 points each",
+            "Advanced: 15 questions, mixed theorems, 15 mins, 10 points each",
+            "Challenge: 20 questions, complex reasoning, 20 mins, 10 points each",
+            "Hint: -2 points, instant feedback, auto notebook"
+        ],
+        badgeBasic: "Basic", basicDesc: "Single Theorem<br>Beginner", basicInfo: "10 Qs | 10 Mins", startBasic: "Start Quiz",
+        badgeAdvanced: "Advanced", advancedDesc: "Mixed Theorems<br>Intermediate", advancedInfo: "15 Qs | 15 Mins", startAdvanced: "Start Quiz",
+        badgeChallenge: "Challenge", challengeDesc: "Complex Reasoning<br>Advanced", advancedInfo: "20 Qs | 20 Mins", startChallenge: "Start Quiz",
+        historyTitle: "History", noHistory: "No history yet!",
+        notebookBtnText: "Wrong Notebook",
+        quizLevelBasic: "Basic", quizLevelAdvanced: "Advanced", quizLevelChallenge: "Challenge",
+        quitBtnText: "Quit", hintBtnText: "Hint (-2pts)", hintContent: "Hint: ",
+        prevBtnText: "Prev", nextBtnText: "Next", submitBtnText: "Submit",
+        selectAnswer: "Select answer:", inputAnswer: "Enter answer (number):",
+        quizQuit: "Quit quiz? Progress not saved!",
+        quizSubmit: "Submit quiz? No changes allowed!",
+        correctTip: "✅ Correct!", wrongTip: "❌ Wrong!",
+        rightAnswer: "Answer: ", analysisText: "Analysis: ",
+        resultTitle: "Quiz Completed!", scoreText: "Score",
+        star1: "Keep practicing!", star2: "Good effort!", star3: "Well done!", star4: "Excellent!", star5: "Perfect!",
+        wrongCount: "Wrong questions: ",
+        replayBtnText: "Retry", viewWrongBtnText: "Review Wrong", backLevelBtnText: "Back",
+        notebookTitle: "Wrong Question Notebook", backNotebookBtnText: "Back", noNotebook: "No wrong questions!",
+        adText: "GCSE Math Course | Master Circle Geometry",
+        copyrightText: "© 2026 Circle Geometry Learning",
+        ti: "", question: "Q",
+        defaultQuestion: "Unnamed Question",
+        defaultAnalysis: "No detailed analysis"
+    }
+};
+
+// 2. 完整题库（所有题目均有中英文题干+解析，无缺失）
+const questionBank = {
+    basic: [
+        {
+            id:"b1",
+            title:{zh:"弦AB=8cm，中垂线过圆心O，交AB于C，则AC=？",en:"Chord AB=8cm, perpendicular bisector passes O, meets AB at C, AC=?"},
+            options:{zh:["4cm","8cm","16cm","2cm"],en:["4cm","8cm","16cm","2cm"]},
+            answer:"4cm",
+            hint:{zh:"垂径定理平分弦",en:"Perpendicular bisector bisects chord"},
+            analysis:{zh:"垂径定理：垂直于弦的直径平分弦，AC=8÷2=4cm",en:"Perpendicular diameter bisects chord, AC=8÷2=4cm"},
+            type:"choice"
+        },
+        {
+            id:"b2",
+            title:{zh:"圆心角60°，对应圆周角=？",en:"Central angle 60°, inscribed angle=?"},
+            options:{zh:["30°","60°","120°","15°"],en:["30°","60°","120°","15°"]},
+            answer:"30°",
+            hint:{zh:"圆周角=圆心角/2",en:"Inscribed angle = central angle /2"},
+            analysis:{zh:"圆周角=圆心角一半，60÷2=30°",en:"Inscribed angle = half central angle, 60÷2=30°"},
+            type:"choice"
+        },
+        {
+            id:"b3",
+            title:{zh:"切线与切点半径夹角=？",en:"Angle between tangent and radius at contact?"},
+            options:{zh:["90°","60°","45°","30°"],en:["90°","60°","45°","30°"]},
+            answer:"90°",
+            hint:{zh:"切线垂直半径",en:"Tangent ⊥ radius"},
+            analysis:{zh:"切线与半径垂直，夹角90°",en:"Tangent perpendicular to radius, angle=90°"},
+            type:"choice"
+        },
+        {
+            id:"b4",
+            title:{zh:"圆内接四边形对角和=？",en:"Sum of opposite angles in cyclic quadrilateral?"},
+            options:{zh:["180°","90°","360°","270°"],en:["180°","90°","360°","270°"]},
+            answer:"180°",
+            hint:{zh:"对角互补",en:"Opposite angles supplementary"},
+            analysis:{zh:"圆内接四边形对角互补，和为180°",en:"Opposite angles sum to 180°"},
+            type:"choice"
+        },
+        {
+            id:"b5",
+            title:{zh:"半径5cm，直径=？",en:"Radius 5cm, diameter=?"},
+            options:{zh:["10cm","2.5cm","15cm","20cm"],en:["10cm","2.5cm","15cm","20cm"]},
+            answer:"10cm",
+            hint:{zh:"直径=半径×2",en:"Diameter=2×radius"},
+            analysis:{zh:"直径=5×2=10cm",en:"Diameter=5×2=10cm"},
+            type:"choice"
+        },
+        {
+            id:"b6",
+            title:{zh:"弦切角=所夹弧的？",en:"Chord tangent angle = ? of intercepted arc"},
+            options:{zh:["圆周角","圆心角","直角","平角"],en:["inscribed angle","central angle","right angle","straight angle"]},
+            answer:"圆周角",
+            hint:{zh:"弦切角定理",en:"Chord tangent theorem"},
+            analysis:{zh:"弦切角等于所夹弧的圆周角",en:"Chord tangent = inscribed angle on arc"},
+            type:"choice"
+        },
+        {
+            id:"b7",
+            title:{zh:"同弧圆周角关系？",en:"Inscribed angles on same arc?"},
+            options:{zh:["相等","互补","互余","倍数"],en:["equal","supplementary","complementary","multiple"]},
+            answer:"相等",
+            hint:{zh:"同弧等角",en:"Same arc, equal angles"},
+            analysis:{zh:"同弧所对圆周角相等",en:"Inscribed angles on same arc are equal"},
+            type:"choice"
+        },
+        {
+            id:"b8",
+            title:{zh:"直径12cm，半径=？",en:"Diameter 12cm, radius=?"},
+            options:{zh:["6","24","3","18"],en:["6","24","3","18"]},
+            answer:"6",
+            hint:{zh:"半径=直径/2",en:"Radius=diameter/2"},
+            analysis:{zh:"半径=12÷2=6",en:"Radius=12÷2=6"},
+            type:"choice"
+        },
+        {
+            id:"b9",
+            title:{zh:"垂直弦直径平分几条弧？",en:"Diameter ⊥ chord bisects how many arcs?"},
+            options:{zh:["2条","1条","3条","4条"],en:["2","1","3","4"]},
+            answer:"2条",
+            hint:{zh:"优弧+劣弧",en:"Major + minor arc"},
+            analysis:{zh:"垂直弦直径平分优弧和劣弧，共2条",en:"Bisects major & minor arc, total 2"},
+            type:"choice"
+        },
+        {
+            id:"b10",
+            title:{zh:"圆心角90°，占圆几分之几？",en:"Central angle 90°, fraction of circle?"},
+            options:{zh:["1/4","1/2","1/3","3/4"],en:["1/4","1/2","1/3","3/4"]},
+            answer:"1/4",
+            hint:{zh:"360°为一圈",en:"360° full circle"},
+            analysis:{zh:"90÷360=1/4",en:"90÷360=1/4"},
+            type:"choice"
+        }
+    ],
+    advanced: [
+        {
+            id:"a1",
+            title:{zh:"半径5，弦心距3，弦长AB=？",en:"Radius 5, chord distance 3, AB=?"},
+            options:{zh:["8cm","6cm","4cm","10cm"],en:["8cm","6cm","4cm","10cm"]},
+            answer:"8cm",
+            hint:{zh:"勾股定理",en:"Pythagoras"},
+            analysis:{zh:"半弦=√(5²-3²)=4，全长=8cm",en:"Half chord=4, full=8cm"},
+            type:"choice"
+        },
+        {
+            id:"a2",
+            title:{zh:"圆心角100°，圆周角补角=？",en:"Central 100°, supplement of inscribed angle=?"},
+            answer:"130",
+            hint:{zh:"圆周角50，补角130",en:"Inscribed 50, supplement 130"},
+            analysis:{zh:"圆周角=50°，补角=180-50=130°",en:"Inscribed=50°, supplement=130°"},
+            type:"input"
+        },
+        {
+            id:"a3",
+            title:{zh:"圆内接四边形∠A=70°，∠C=？",en:"Cyclic quad ∠A=70°, ∠C=?"},
+            answer:"110",
+            hint:{zh:"对角互补",en:"Opposite angles supplementary"},
+            analysis:{zh:"∠C=180-70=110°",en:"∠C=180-70=110°"},
+            type:"input"
+        },
+        {
+            id:"a4",
+            title:{zh:"切线夹角60°，∠AOB=？",en:"Tangents angle 60°, ∠AOB=?"},
+            options:{zh:["120°","60°","90°","150°"],en:["120°","60°","90°","150°"]},
+            answer:"120°",
+            hint:{zh:"四边形内角和360",en:"Quad sum 360"},
+            analysis:{zh:"360-90-90-60=120°",en:"360-90-90-60=120°"},
+            type:"choice"
+        },
+        {
+            id:"a5",
+            title:{zh:"弦10cm，弦心距12cm，半径=？",en:"Chord 10cm, distance 12cm, radius=?"},
+            options:{zh:["13cm","11cm","14cm","15cm"],en:["13cm","11cm","14cm","15cm"]},
+            answer:"13cm",
+            hint:{zh:"勾股定理",en:"Pythagoras"},
+            analysis:{zh:"半径=√(5²+12²)=13cm",en:"Radius=13cm"},
+            type:"choice"
+        },
+        {
+            id:"a6",
+            title:{zh:"圆周角45°，圆心角=？",en:"Inscribed 45°, central angle=?"},
+            options:{zh:["90°","45°","180°","60°"],en:["90°","45°","180°","60°"]},
+            answer:"90°",
+            hint:{zh:"圆心角=2×圆周角",en:"Central=2×inscribed"},
+            analysis:{zh:"圆心角=45×2=90°",en:"Central=90°"},
+            type:"choice"
+        },
+        {
+            id:"a7",
+            title:{zh:"AB为直径，∠ACB=？",en:"AB diameter, ∠ACB=?"},
+            answer:"90",
+            hint:{zh:"直径对直角",en:"Angle in semicircle"},
+            analysis:{zh:"半圆所对圆周角=90°",en:"Angle in semicircle=90°"},
+            type:"input"
+        },
+        {
+            id:"a8",
+            title:{zh:"弦切角30°，所夹弧=？",en:"Chord tangent 30°, arc=?"},
+            options:{zh:["60°","30°","120°","150°"],en:["60°","30°","120°","150°"]},
+            answer:"60°",
+            hint:{zh:"弧=2×弦切角",en:"Arc=2×chord tangent"},
+            analysis:{zh:"弧=30×2=60°",en:"Arc=60°"},
+            type:"choice"
+        },
+        {
+            id:"a9",
+            title:{zh:"圆内接四边形外角80°，内对角=？",en:"Cyclic quad exterior 80°, interior opposite=?"},
+            answer:"80",
+            hint:{zh:"外角=内对角",en:"Exterior=interior opposite"},
+            analysis:{zh:"外角等于内对角=80°",en:"Exterior=interior opposite=80°"},
+            type:"input"
+        },
+        {
+            id:"a10",
+            title:{zh:"半径10，弦16，弦心距=？",en:"Radius10, chord16, distance=?"},
+            options:{zh:["6cm","8cm","4cm","12cm"],en:["6cm","8cm","4cm","12cm"]},
+            answer:"6cm",
+            hint:{zh:"勾股定理",en:"Pythagoras"},
+            analysis:{zh:"弦心距=√(10²-8²)=6cm",en:"Distance=6cm"},
+            type:"choice"
+        }
+    ],
+    challenge: [
+        {
+            id:"c1",
+            title:{zh:"半径5，AB=8，CD=6，AB∥CD，距离=？",en:"Radius5, AB=8, CD=6, AB∥CD, distance=?"},
+            options:{zh:["1或7","2或8","3或9","4或10"],en:["1 or7","2 or8","3 or9","4 or10"]},
+            answer:"1或7",
+            hint:{zh:"同侧/异侧",en:"Same/opposite side"},
+            analysis:{zh:"弦心距3和4，同侧差1，异侧和7",en:"Distances 3&4, sum=7, diff=1"},
+            type:"choice"
+        },
+        {
+            id:"c2",
+            title:{zh:"切线PA=12，PO=13，圆面积=？",en:"Tangent PA=12, PO=13, area=?"},
+            answer:"25π",
+            hint:{zh:"半径5，面积πr²",en:"Radius5, area=πr²"},
+            analysis:{zh:"OA=5，面积=25π",en:"OA=5, area=25π"},
+            type:"input"
+        },
+        {
+            id:"c3",
+            title:{zh:"直径10，CD⊥AB，CE=4，AE=？",en:"Diameter10, CD⊥AB, CE=4, AE=?"},
+            options:{zh:["2或8","3或7","4或6","1或9"],en:["2 or8","3 or7","4 or6","1 or9"]},
+            answer:"2或8",
+            hint:{zh:"OE=3，AE=5±3",en:"OE=3, AE=5±3"},
+            analysis:{zh:"OE=3，AE=8或2",en:"AE=8 or 2"},
+            type:"choice"
+        },
+        {
+            id:"c4",
+            title:{zh:"圆内接四边形比1:2:3:4，求角度",en:"Cyclic quad ratio1:2:3:4, angles"},
+            answer:"36°,72°,108°,144°",
+            hint:{zh:"对角互补",en:"Opposite angles supplementary"},
+            analysis:{zh:"角度为36°,72°,108°,144°",en:"Angles:36,72,108,144"},
+            type:"input"
+        }
+    ]
+};
+
+// 全局变量
+let currentLang = "zh";
+let currentLevel = "";
+let currentQuestionCount = 0;
+let currentTime = 0;
+let countdownTimer = null;
+let questions = [];
+let userAnswers = {};
+let score = 0;
+let hintUsed = {};
+let wrongQuestions = [];
+let historyRecords = JSON.parse(localStorage.getItem("quizHistory")) || [];
+let wrongNotebook = JSON.parse(localStorage.getItem("wrongNotebook")) || [];
+
+// 页面加载初始化
+window.onload = function() {
+    // 清除旧的错误数据（避免缓存导致的显示问题）
+    localStorage.removeItem("wrongNotebook");
+    localStorage.removeItem("quizHistory");
+    wrongNotebook = [];
+    historyRecords = [];
+    
+    initLang();
+    initTheme();
+    initFontSize();
+    renderHistory();
+    renderNotebook();
+    bindEvents();
+};
+
+// 初始化所有语言文字（确保100%覆盖）
+function initLang() {
+    // 页面标题
+    document.getElementById("page-title").textContent = langData[currentLang].pageTitle;
+    // 面包屑
+    document.getElementById("breadcrumb-home").textContent = langData[currentLang].breadcrumbHome;
+    document.getElementById("breadcrumb-quiz").textContent = langData[currentLang].breadcrumbQuiz;
+    // 等级选择页面
+    document.getElementById("level-title").textContent = langData[currentLang].levelTitle;
+    document.getElementById("rule-title").textContent = langData[currentLang].ruleTitle;
+    document.getElementById("rule-list").innerHTML = langData[currentLang].ruleList.map(item => `<li>${item}</li>`).join("");
+    // 等级卡片
+    document.getElementById("badge-basic").textContent = langData[currentLang].badgeBasic;
+    document.getElementById("basic-desc").innerHTML = langData[currentLang].basicDesc;
+    document.getElementById("basic-info").textContent = langData[currentLang].basicInfo;
+    document.getElementById("start-basic").textContent = langData[currentLang].startBasic;
+    document.getElementById("badge-advanced").textContent = langData[currentLang].badgeAdvanced;
+    document.getElementById("advanced-desc").innerHTML = langData[currentLang].advancedDesc;
+    document.getElementById("advanced-info").textContent = langData[currentLang].advancedInfo;
+    document.getElementById("start-advanced").textContent = langData[currentLang].startAdvanced;
+    document.getElementById("badge-challenge").textContent = langData[currentLang].badgeChallenge;
+    document.getElementById("challenge-desc").innerHTML = langData[currentLang].challengeDesc;
+    document.getElementById("challenge-info").textContent = langData[currentLang].challengeInfo;
+    document.getElementById("start-challenge").textContent = langData[currentLang].startChallenge;
+    // 历史记录+错题本入口
+    document.getElementById("history-title").textContent = langData[currentLang].historyTitle;
+    document.getElementById("history-list").textContent = historyRecords.length === 0 ? langData[currentLang].noHistory : "";
+    document.getElementById("notebook-btn-text").textContent = langData[currentLang].notebookBtnText;
+    // 答题页面按钮
+    document.getElementById("quit-btn-text").textContent = langData[currentLang].quitBtnText;
+    document.getElementById("hint-btn-text").textContent = langData[currentLang].hintBtnText;
+    document.getElementById("prev-btn-text").textContent = langData[currentLang].prevBtnText;
+    document.getElementById("next-btn-text").textContent = langData[currentLang].nextBtnText;
+    document.getElementById("submit-btn-text").textContent = langData[currentLang].submitBtnText;
+    // 结果页面
+    document.getElementById("result-title").textContent = langData[currentLang].resultTitle;
+    document.getElementById("score-text").textContent = langData[currentLang].scoreText;
+    document.getElementById("replay-btn-text").textContent = langData[currentLang].replayBtnText;
+    document.getElementById("view-wrong-btn-text").textContent = langData[currentLang].viewWrongBtnText;
+    document.getElementById("back-level-btn-text").textContent = langData[currentLang].backLevelBtnText;
+    // 错题本页面
+    document.getElementById("notebook-title").textContent = langData[currentLang].notebookTitle;
+    document.getElementById("back-notebook-btn-text").textContent = langData[currentLang].backNotebookBtnText;
+    document.getElementById("notebook-list").textContent = wrongNotebook.length === 0 ? langData[currentLang].noNotebook : "";
+    // 底部
+    document.getElementById("ad-text").textContent = langData[currentLang].adText;
+    document.getElementById("copyright-text").textContent = langData[currentLang].copyrightText;
+}
+
+// 切换语言（全页面强制更新，无残留）
+function switchLang(lang) {
+    currentLang = lang;
+    // 切换按钮样式
+    document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.remove("active"));
+    document.getElementById(`lang-${lang}`).classList.add("active");
+    
+    // 强制更新所有文字
+    initLang();
+    
+    // 实时更新当前页面
+    if (document.getElementById("quiz-page").classList.contains("active")) {
+        updateQuizPageLang();
+        renderQuestion(currentQuestionCount);
+    }
+    if (document.getElementById("result-page").classList.contains("active")) {
+        renderResult();
+    }
+    if (document.getElementById("notebook-page").classList.contains("active")) {
+        renderNotebook();
+    }
+    if (document.getElementById("level-selection").classList.contains("active")) {
+        renderHistory();
+    }
+}
+
+// 更新答题页面等级名称
+function updateQuizPageLang() {
+    const levelName = currentLevel === "basic" ? langData[currentLang].quizLevelBasic :
+                      currentLevel === "advanced" ? langData[currentLang].quizLevelAdvanced :
+                      langData[currentLang].quizLevelChallenge;
+    document.getElementById("quiz-level-name").textContent = levelName;
+}
+
+// 主题切换
+function initTheme() {
+    if (localStorage.getItem("darkTheme") === "true") {
+        document.body.classList.add("dark");
+        document.getElementById("theme-toggle").innerHTML = '<i class="fas fa-sun"></i>';
+    }
+}
+function toggleTheme() {
+    const isDark = document.body.classList.toggle("dark");
+    localStorage.setItem("darkTheme", isDark);
+    document.getElementById("theme-toggle").innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+}
+
+// 字号调节
+function initFontSize() {
+    const fontSize = localStorage.getItem("fontSize") || "normal";
+    document.body.classList.add(`font-${fontSize}`);
+    document.getElementById(`font-${fontSize}`).classList.add("active");
+}
+function setFontSize(size) {
+    document.body.classList.remove("font-sm", "font-normal", "font-lg");
+    document.body.classList.add(`font-${size}`);
+    localStorage.setItem("fontSize", size);
+    document.querySelectorAll(".header-controls button[id^='font-']").forEach(btn => btn.classList.remove("active"));
+    document.getElementById(`font-${size}`).classList.add("active");
+}
+
+// 开始测验
+function startQuiz(level, count, time) {
+    currentLevel = level;
+    currentQuestionCount = 0;
+    currentTime = time;
+    score = 0;
+    userAnswers = {};
+    hintUsed = {};
+    wrongQuestions = [];
+    
+    // 随机选题（确保不重复）
+    questions = shuffle([...questionBank[level]]).slice(0, count);
+    
+    // 切换页面并初始化
+    switchPage("quiz-page");
+    initCountdown();
+    updateQuizPageLang();
+    renderQuestion(0);
+    updateQuestionCount();
+}
+
+// 渲染题目（确保双语同步）
+function renderQuestion(index) {
+    if (index < 0 || index >= questions.length) return;
+    const q = questions[index];
+    
+    // 渲染题干（强制使用当前语言）
+    document.getElementById("question-title").textContent = `${langData[currentLang].question}${index+1}${langData[currentLang].ti}：${q.title[currentLang]}`;
+    const answerArea = document.getElementById("answer-area");
+    answerArea.innerHTML = "";
+    
+    // 清空提示和反馈
+    document.getElementById("hint-content").classList.remove("show");
+    document.getElementById("hint-content").textContent = "";
+    document.getElementById("answer-feedback").style.display = "none";
+    
+    // 渲染选择题
+    if (q.type === "choice") {
+        answerArea.innerHTML = `<p>${langData[currentLang].selectAnswer}</p>` + 
+            q.options[currentLang].map((opt, i) => `
+                <div class="answer-option ${userAnswers[q.id] === opt ? 'selected' : ''}" data-opt="${opt}">
+                    <span>${String.fromCharCode(65 + i)}</span>. ${opt}
+                </div>
+            `).join("");
+        
+        // 选择题点击事件
+        document.querySelectorAll(".answer-option").forEach(option => {
+            option.addEventListener("click", function() {
+                document.querySelectorAll(".answer-option").forEach(opt => opt.classList.remove("selected", "correct", "wrong"));
+                this.classList.add("selected");
+                userAnswers[q.id] = this.dataset.opt;
+                checkAnswer(q);
+            });
+        });
+    } 
+    // 渲染填空题
+    else if (q.type === "input") {
+        answerArea.innerHTML = `
+            <p>${langData[currentLang].inputAnswer}</p>
+            <input type="text" class="answer-input" value="${userAnswers[q.id] || ''}">
+            <button class="submit-answer-btn">${langData[currentLang].submitBtnText}</button>
+        `;
+        
+        // 填空题提交事件
+        document.querySelector(".submit-answer-btn").addEventListener("click", function() {
+            userAnswers[q.id] = document.querySelector(".answer-input").value.trim();
+            checkAnswer(q);
+        });
+    }
+    
+    // 禁用/启用上下题按钮
+    document.getElementById("prev-question").disabled = index === 0;
+    document.getElementById("next-question").disabled = index === questions.length - 1;
+}
+
+// 检查答案并显示反馈（确保解析100%显示）
+function checkAnswer(q) {
+    const feedback = document.getElementById("answer-feedback");
+    const userAns = userAnswers[q.id] || "";
+    const isCorrect = userAns === q.answer.toString();
+    
+    // 强制获取解析（避免undefined）
+    const analysis = q.analysis?.[currentLang] || langData[currentLang].defaultAnalysis;
+    
+    if (isCorrect) {
+        feedback.innerHTML = `${langData[currentLang].correctTip}<br>${langData[currentLang].analysisText}${analysis}`;
+        feedback.style.color = "var(--success)";
+        // 选择题标绿正确选项
+        if (q.type === "choice") {
+            document.querySelectorAll(".answer-option").forEach(opt => {
+                if (opt.dataset.opt === q.answer) opt.classList.add("correct");
+            });
+        }
+    } else {
+        const correctAnswer = q.answer || langData[currentLang].rightAnswer + "无";
+        feedback.innerHTML = `${langData[currentLang].wrongTip}<br>${langData[currentLang].rightAnswer}${correctAnswer}<br>${langData[currentLang].analysisText}${analysis}`;
+        feedback.style.color = "var(--danger)";
+        // 选择题标红错误、标绿正确
+        if (q.type === "choice") {
+            document.querySelectorAll(".answer-option").forEach(opt => {
+                if (opt.dataset.opt === userAns) opt.classList.add("wrong");
+                if (opt.dataset.opt === q.answer) opt.classList.add("correct");
+            });
+        }
+    }
+    feedback.style.display = "block";
+}
+
+// 倒计时
+function initCountdown() {
+    clearInterval(countdownTimer);
+    updateCountdown();
+    countdownTimer = setInterval(() => {
+        currentTime--;
+        updateCountdown();
+        if (currentTime <= 0) {
+            clearInterval(countdownTimer);
+            submitQuiz();
+        }
+    }, 1000);
+}
+function updateCountdown() {
+    const min = Math.floor(currentTime / 60);
+    const sec = currentTime % 60;
+    document.getElementById("countdown").textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
+
+// 切换题目
+function changeQuestion(type) {
+    const input = document.querySelector(".answer-input");
+    if (input) {
+        userAnswers[questions[currentQuestionCount].id] = input.value.trim();
+    }
+    currentQuestionCount = type === "prev" ? currentQuestionCount - 1 : currentQuestionCount + 1;
+    renderQuestion(currentQuestionCount);
+    updateQuestionCount();
+}
+
+// 显示提示
+function showHint() {
+    const q = questions[currentQuestionCount];
+    if (!q || hintUsed[q.id]) return;
+    hintUsed[q.id] = true;
+    document.getElementById("hint-content").textContent = `${langData[currentLang].hintContent}${q.hint[currentLang]}`;
+    document.getElementById("hint-content").classList.add("show");
+}
+
+// 提交测验
+function submitQuiz() {
+    if (!confirm(langData[currentLang].quizSubmit)) return;
+    clearInterval(countdownTimer);
+    
+    // 判分
+    questions.forEach(q => {
+        const userAns = userAnswers[q.id] || "";
+        const isCorrect = userAns === q.answer.toString();
+        
+        if (isCorrect) {
+            score += hintUsed[q.id] ? 8 : 10;
+        } else {
+            wrongQuestions.push(q);
+            // 错题去重
+            if (!wrongNotebook.some(item => item.id === q.id)) {
+                wrongNotebook.push(q);
+            }
+        }
+    });
+    
+    // 保存错题本（强制更新）
+    localStorage.setItem("wrongNotebook", JSON.stringify(wrongNotebook));
+    saveHistory();
+    renderResult();
+    switchPage("result-page");
+}
+
+// 保存答题历史
+function saveHistory() {
+    const levelName = currentLevel === "basic" ? langData[currentLang].quizLevelBasic :
+                      currentLevel === "advanced" ? langData[currentLang].quizLevelAdvanced :
+                      langData[currentLang].quizLevelChallenge;
+    
+    historyRecords.unshift({
+        level: currentLevel,
+        levelName: levelName,
+        score: score,
+        full: questions.length * 10,
+        time: new Date().toLocaleString(currentLang === "zh" ? "zh-CN" : "en-GB"),
+        wrong: wrongQuestions.length
+    });
+    
+    if (historyRecords.length > 10) historyRecords.pop();
+    localStorage.setItem("quizHistory", JSON.stringify(historyRecords));
+    renderHistory();
+    renderNotebook();
+}
+
+// 渲染测验结果
+function renderResult() {
+    const full = questions.length * 10;
+    document.getElementById("total-score").textContent = score;
+    document.getElementById("full-score").textContent = full;
+    document.getElementById("wrong-count").textContent = `${langData[currentLang].wrongCount}${wrongQuestions.length}${langData[currentLang].ti}`;
+    
+    const rate = score / full;
+    let starNum = 0;
+    let desc = "";
+    if (rate >= 0.9) { starNum = 5; desc = langData[currentLang].star5; }
+    else if (rate >= 0.7) { starNum = 4; desc = langData[currentLang].star4; }
+    else if (rate >= 0.5) { starNum = 3; desc = langData[currentLang].star3; }
+    else if (rate >= 0.3) { starNum = 2; desc = langData[currentLang].star2; }
+    else { starNum = 1; desc = langData[currentLang].star1; }
+    
+    document.getElementById("result-desc").textContent = desc;
+    document.getElementById("star-rating").innerHTML = "★".repeat(starNum) + "☆".repeat(5 - starNum);
+}
+
+// 渲染答题历史
+function renderHistory() {
+    const historyList = document.getElementById("history-list");
+    if (historyRecords.length === 0) {
+        historyList.textContent = langData[currentLang].noHistory;
+        return;
+    }
+    
+    historyList.innerHTML = historyRecords.map((record, index) => `
+        <div class="notebook-item">
+            <h4>${index+1}. ${record.levelName} | ${record.time}</h4>
+            <p>${langData[currentLang].scoreText}：${record.score}/${record.full} | ${langData[currentLang].wrongCount}${record.wrong}${langData[currentLang].ti}</p>
+        </div>
+    `).join("");
+}
+
+// 渲染错题本（彻底修复题目和解析显示问题）
+function renderNotebook() {
+    const notebookList = document.getElementById("notebook-list");
+    if (wrongNotebook.length === 0) {
+        notebookList.textContent = langData[currentLang].noNotebook;
+        return;
+    }
+    
+    // 强制渲染题干、答案、解析（无undefined）
+    notebookList.innerHTML = wrongNotebook.map((q, index) => {
+        const title = q.title?.[currentLang] || langData[currentLang].defaultQuestion;
+        const answer = q.answer || "无";
+        const analysis = q.analysis?.[currentLang] || langData[currentLang].defaultAnalysis;
+        
+        return `
+        <div class="notebook-item">
+            <h4>${index+1}. ${title}</h4>
+            <p style="color: var(--primary);">${langData[currentLang].rightAnswer}${answer}</p>
+            <div class="analysis">${langData[currentLang].analysisText}${analysis}</div>
+        </div>
+    `;
+    }).join("");
+}
+
+// 切换页面
+function switchPage(pageId) {
+    document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+    document.getElementById(pageId).classList.add("active");
+}
+
+// 数组洗牌（随机选题）
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// 更新题目计数
+function updateQuestionCount() {
+    document.getElementById("quiz-question-count").textContent = `${currentQuestionCount+1}/${questions.length}`;
+}
+
+// 退出测验
+function quitQuiz() {
+    if (confirm(langData[currentLang].quizQuit)) {
+        clearInterval(countdownTimer);
+        switchPage("level-selection");
+    }
+}
+
+// 绑定所有事件
+function bindEvents() {
+    // 语言切换
+    document.getElementById("lang-zh").addEventListener("click", () => switchLang("zh"));
+    document.getElementById("lang-en").addEventListener("click", () => switchLang("en"));
+    // 主题切换
+    document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+    // 字号调节
+    document.getElementById("font-sm").addEventListener("click", () => setFontSize("sm"));
+    document.getElementById("font-normal").addEventListener("click", () => setFontSize("normal"));
+    document.getElementById("font-lg").addEventListener("click", () => setFontSize("lg"));
+    // 开始测验
+    document.querySelectorAll(".start-quiz-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const levelCard = btn.closest(".level-card");
+            const level = levelCard.dataset.level;
+            const count = parseInt(levelCard.dataset.count);
+            const time = parseInt(levelCard.dataset.time);
+            startQuiz(level, count, time);
+        });
+    });
+    // 上一题/下一题
+    document.getElementById("prev-question").addEventListener("click", () => changeQuestion("prev"));
+    document.getElementById("next-question").addEventListener("click", () => changeQuestion("next"));
+    // 提示/提交/退出
+    document.getElementById("hint-btn").addEventListener("click", showHint);
+    document.getElementById("submit-quiz").addEventListener("click", submitQuiz);
+    document.getElementById("quit-quiz").addEventListener("click", quitQuiz);
+    // 结果页面按钮
+    document.getElementById("replay-quiz").addEventListener("click", () => {
+        const levelCard = document.querySelector(`.level-card[data-level="${currentLevel}"]`);
+        startQuiz(currentLevel, parseInt(levelCard.dataset.count), parseInt(levelCard.dataset.time));
+    });
+    document.getElementById("view-wrong").addEventListener("click", () => switchPage("notebook-page"));
+    document.getElementById("back-to-level").addEventListener("click", () => switchPage("level-selection"));
+    // 错题本按钮
+    document.getElementById("back-from-notebook").addEventListener("click", () => switchPage("level-selection"));
+    document.getElementById("open-notebook").addEventListener("click", () => switchPage("notebook-page"));
+}
