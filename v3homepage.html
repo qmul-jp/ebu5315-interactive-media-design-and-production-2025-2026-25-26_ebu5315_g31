@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CircleMaster | 圆定理交互学习平台 - Version 3</title>
+    <!-- 外部 CSS 文件 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 顶部工具栏 -->
+<div class="top-toolbar" role="region" aria-label="辅助功能工具条">
+    <div class="tool-group">
+        <button id="decreaseFont" class="tool-btn" aria-label="减小字体"><i class="fas fa-font"></i> A-</button>
+        <button id="resetFont" class="tool-btn" aria-label="重置字体"><i class="fas fa-undo-alt"></i> 默认</button>
+        <button id="increaseFont" class="tool-btn" aria-label="增大字体"><i class="fas fa-font"></i> A+</button>
+    </div>
+    <div class="tool-group">
+        <button id="darkModeToggle" class="tool-btn" aria-label="深色模式"><i class="fas fa-moon"></i> 深色模式</button>
+    </div>
+    <div class="tool-group">
+        <button id="langEn" class="tool-btn lang-btn" data-lang="en">English</button>
+        <button id="langZh" class="tool-btn lang-btn" data-lang="zh">中文</button>
+    </div>
+</div>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo-container">
+            <a href="#" class="logo-link" id="homeLink" aria-label="回到首页">
+                <i class="fas fa-circle-notch"></i>
+                <span data-i18n="site_name">CircleMaster</span>
+            </a>
+        </div>
+        <nav class="main-nav" aria-label="主菜单">
+            <ul>
+                <li><a href="#" class="active" data-i18n="nav_home">首页</a></li>
+                <li><a href="#" id="gameLinkPlaceholder" data-i18n="nav_game">游戏挑战</a></li>
+                <li><a href="#" id="quizLinkPlaceholder" data-i18n="nav_quiz">知识测验</a></li>
+                <li><a href="#" id="authBtn" class="auth-btn" data-i18n="login_register">登录/注册</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="breadcrumb-wrapper">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="#" data-i18n="home_breadcrumb">首页</a></li>
+            <li><span data-i18n="current_breadcrumb">圆定理学习</span></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <!-- HERO 区：卖点 -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1 data-i18n="hero_title">Learn Circle Theorems Easily</h1>
+                <p class="hero-sub" data-i18n="hero_subtitle">GCSE Math Interactive Learning And Animation</p>
+                <p class="hero-selling" data-i18n="hero_usp">✨ 互动游戏 | AI智能助手 | 自适应测验 | 动画定理演示 ✨</p>
+                <button id="startLearningBtn" class="btn-primary cta-btn" data-i18n="start_btn">开始学习</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 圆定理核心规则卡片 -->
+    <section class="theorems-cards">
+        <div class="container">
+            <h2 id="theorems-heading" data-i18n="main_theorems_title">📐 主要圆定理</h2>
+            <div class="cards-grid">
+                <div class="card theorem-card">
+                    <div class="card-icon"><i class="fas fa-angles-right"></i></div>
+                    <h3 data-i18n="th1_title">圆周角定理</h3>
+                    <p data-i18n="th1_desc">同弧所对的圆周角相等，且等于圆心角的一半。</p>
+                </div>
+                <div class="card theorem-card">
+                    <div class="card-icon"><i class="fas fa-circle-dot"></i></div>
+                    <h3 data-i18n="th2_title">直径所对圆周角</h3>
+                    <p data-i18n="th2_desc">直径所对的圆周角是直角（90°）。</p>
+                </div>
+                <div class="card theorem-card">
+                    <div class="card-icon"><i class="fas fa-chord"></i></div>
+                    <h3 data-i18n="th3_title">圆内接四边形</h3>
+                    <p data-i18n="th3_desc">圆内接四边形对角互补，外角等于内对角。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 动画/幻灯片展示圆定理（带字幕） -->
+    <section class="watch-learn">
+        <div class="container">
+            <h2 data-i18n="watch_title">🎬 Watch & Learn | 动画演示</h2>
+            <div class="slider-container">
+                <div class="slider" id="theoremSlider">
+                    <div class="slide active">
+                        <div class="slide-graphic"><i class="fas fa-chalkboard-user"></i></div>
+                        <div class="slide-caption" data-i18n="slide1_caption">定理1：圆周角 = 圆心角的一半 (同弧)</div>
+                        <div class="slide-sub" data-i18n="slide1_detail">∠APB = ½ ∠AOB，点P在圆上同弧AB。</div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-graphic"><i class="fas fa-chart-line"></i></div>
+                        <div class="slide-caption" data-i18n="slide2_caption">定理2：直径所对的圆周角 = 90°</div>
+                        <div class="slide-sub" data-i18n="slide2_detail">若AB为直径，则∠ACB = 90°。</div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-graphic"><i class="fas fa-shapes"></i></div>
+                        <div class="slide-caption" data-i18n="slide3_caption">定理3：圆内接四边形对角互补</div>
+                        <div class="slide-sub" data-i18n="slide3_detail">∠A + ∠C = 180°, ∠B + ∠D = 180°。</div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slide-dots" id="slideDots"></div>
+                    <button class="slider-btn next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="subtitle-track" aria-live="polite">
+                    <span id="liveSubtitle" data-i18n="slide1_caption">定理1：圆周角 = 圆心角的一半 (同弧)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 广告横幅 / 盈利机制 -->
+    <div class="ads-banner">
+        <div class="container ads-content">
+            <i class="fas fa-ad"></i>
+            <span data-i18n="ad_text">🌟 限时特惠：购买高级几何学习包，解锁全部挑战！ 🌟</span>
+            <button class="ad-btn" data-i18n="ad_btn">立即抢购</button>
+        </div>
+    </div>
+
+    <!-- AI 聊天机器人（增强版：支持上下文记忆） -->
+    <section class="ai-assistant-section">
+        <div class="container">
+            <div class="ai-chatbot-card" id="aiAssistantCard">
+                <div class="ai-header">
+                    <i class="fas fa-robot"></i>
+                    <span data-i18n="ai_greeting">✨ AI 学习助手 | 随时解答圆定理问题 ✨</span>
+                </div>
+                <div class="chat-messages-card" id="aiChatMessages">
+                    <div class="bot-msg">👋 嗨！我是你的几何AI教练，问我任何圆定理相关的问题，例如：“圆周角定理是什么？” 或 “帮我出一道练习题”</div>
+                </div>
+                <div class="ai-input-group">
+                    <input type="text" id="aiUserInput" placeholder="输入你的问题..." aria-label="向AI提问">
+                    <button id="aiSendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
+                </div>
+                <p class="form-feedback" style="font-size:12px; margin-top:8px;" data-i18n="ai_disclaimer">💡 AI演示：支持上下文记忆，试试连续提问！</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系表单（增强验证与成功提示） -->
+    <section class="contact-section">
+        <div class="container">
+            <h2 data-i18n="contact_title">📬 联系我们</h2>
+            <div class="contact-wrapper">
+                <form id="contactForm" class="contact-form" novalidate>
+                    <div class="form-group">
+                        <label for="name" data-i18n="form_name">姓名</label>
+                        <input type="text" id="name" placeholder="Your name / 您的姓名" required>
+                        <div class="field-error" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-i18n="form_email">电子邮箱</label>
+                        <input type="email" id="email" placeholder="email@example.com" required>
+                        <div class="field-error" id="emailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" data-i18n="form_message">留言内容</label>
+                        <textarea id="message" rows="4" placeholder="Tell us your learning journey..." required></textarea>
+                        <div class="field-error" id="messageError"></div>
+                    </div>
+                    <div class="form-policy">
+                        <input type="checkbox" id="policyConsent" required>
+                        <label for="policyConsent" data-i18n="policy_consent">我已阅读并同意<strong data-i18n="policy_link">数据隐私政策</strong>（演示用途）</label>
+                        <div class="field-error" id="policyError"></div>
+                    </div>
+                    <button type="submit" class="btn-secondary" data-i18n="submit_btn">提交信息</button>
+                    <p id="formFeedback" class="form-feedback success-message"></p>
+                </form>
+                <div class="data-transparency" id="dataPolicyBox">
+                    <p><i class="fas fa-shield-alt"></i> <span data-i18n="data_policy_text">透明数据政策：我们仅收集姓名邮箱用于回复咨询，绝不向第三方出售。所有数据仅作模拟演示，符合伦理与隐私保护。</span></p>
+                    <p><span data-i18n="colorblind_notice">🎨 本网站对于色觉障碍人士友好，请点击页面底部按钮进行颜色转换。</span></p>
+                    <p><span data-i18n="contact_opt_notice">📧 联系我们所收集到的信息仅作为系统优化建议使用，请不要担心信息泄露，感谢您的建议！</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p data-i18n="footer_copyright">© 2026 CircleMaster | 几何交互学习 | 包容性设计 | GCSE圆定理</p>
+        <p data-i18n="footer_ethical">♿ 无障碍设计：色盲友好配色 | 可调字体 | 字幕支持 | 中英双语 | 暗色模式</p>
+        <div class="footer-buttons">
+            <button id="colorblindToggleBtn" class="colorblind-toggle" data-i18n="colorblind_btn">🌈 色盲友好模式 / Colorblind Mode</button>
+        </div>
+    </div>
+</footer>
+
+<!-- 登录/注册模态框（附加功能） -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 data-i18n="modal_title">账户访问</h3>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="login" data-i18n="login_tab">登录</button>
+            <button class="tab-btn" data-tab="register" data-i18n="register_tab">注册</button>
+        </div>
+        <div id="loginPane" class="tab-pane active">
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="电子邮箱" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="密码" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%" data-i18n="login_btn">登录</button>
+                <span id="loginError" class="auth-error"></span>
+            </form>
+        </div>
+        <div id="registerPane" class="tab-pane">
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <input type="text" id="regName" placeholder="用户名" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="regEmail" placeholder="电子邮箱" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPassword" placeholder="密码 (至少6位)" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regConfirm" placeholder="确认密码" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%" data-i18n="register_btn">注册新账户</button>
+                <span id="registerError" class="auth-error"></span>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
