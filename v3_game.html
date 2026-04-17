@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>GeoBuilder | Circle Theorem Game - Version 3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --card-bg: rgba(30, 41, 59, 0.9);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-dark: #1e40af;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --glow: 0 0 15px rgba(59,130,246,0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --card-bg: rgba(255,255,255,0.95);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* 头部导航 */
+        .top-nav {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 12px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light, #60a5fa));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .controls-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 6px 14px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* 主布局 - 三栏 */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 20px;
+        }
+
+        /* 左侧面板 */
+        .left-panel {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        /* 定理卡片 */
+        .theorem-grid {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 24px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .theorem-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .theorem-card.active {
+            border-color: var(--accent);
+            background: rgba(59,130,246,0.1);
+            box-shadow: var(--glow);
+        }
+
+        .theorem-card.completed {
+            border-color: var(--success);
+            opacity: 0.8;
+        }
+
+        .theorem-card.completed::after {
+            content: "✓";
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .theorem-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .theorem-desc {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        /* 中间游戏区 */
+        .game-panel {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .challenge-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .challenge-badge {
+            display: inline-block;
+            background: var(--accent);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .challenge-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* 游戏状态栏 */
+        .game-status {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .timer {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: var(--accent);
+        }
+
+        .timer.warning {
+            color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .lives {
+            display: flex;
+            gap: 4px;
+        }
+
+        /* 画布区 */
+        .canvas-area {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        canvas {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            cursor: crosshair;
+            max-width: 100%;
+            height: auto;
+        }
+
+        canvas.shake {
+            animation: shake 0.3s ease;
+        }
+
+        canvas.celebrate {
+            animation: celebrate 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 0 30px var(--accent); }
+            100% { transform: scale(1); }
+        }
+
+        /* 工具条 */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
+        }
+
+        .tool-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* 目标提示 */
+        .goal-hint {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border-radius: 16px;
+            padding: 10px 16px;
+            margin: 12px 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+
+        /* 右侧AI面板 - 增强版 */
+        .right-panel {
+            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+            border-radius: 24px;
+            padding: 20px;
+            color: white;
+            height: fit-content;
+        }
+
+        .chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .chat-message {
+            padding: 10px;
+            border-radius: 16px;
+            max-width: 90%;
+            font-size: 0.8rem;
+        }
+
+        .chat-message.user {
+            background: rgba(255,255,255,0.2);
+            align-self: flex-end;
+        }
+
+        .chat-message.ai {
+            background: rgba(255,255,255,0.1);
+            align-self: flex-start;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            outline: none;
+            font-size: 0.8rem;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .chat-send {
+            padding: 8px 16px;
+            background: white;
+            border: none;
+            border-radius: 40px;
+            color: var(--accent);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 模态框 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 32px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1000px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="top-nav">
+            <div class="logo-area">
+                <span class="logo-icon">⚪</span>
+                <span class="logo-text">GeoBuilder | Circle Theorem Game v3</span>
+            </div>
+            <div class="controls-group">
+                <button class="icon-btn" id="themeToggleBtn">🌙 Dark</button>
+                <button class="icon-btn" id="langToggleBtn">🌐 中文</button>
+                <button class="icon-btn" id="resetProgressBtn">🔄 Reset Progress</button>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <!-- 左侧：定理列表 -->
+            <div class="left-panel">
+                <div class="section-title">📚 Circle Theorems (8)</div>
+                <div class="theorem-grid" id="theoremGrid"></div>
+                <div class="section-title" style="margin-top: 20px;">📊 Game Stats</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="scoreValue">0</div>
+                        <div class="stat-label">Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="streakValue">0</div>
+                        <div class="stat-label">Combo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="highScoreValue">0</div>
+                        <div class="stat-label">Best</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedValue">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中间：游戏区 -->
+            <div class="game-panel">
+                <div class="challenge-header">
+                    <span class="challenge-badge" id="levelBadge">🎯 Challenge 1/8</span>
+                    <h2 class="challenge-title" id="challengeTitle">Central Angle Theorem</h2>
+                </div>
+
+                <div class="game-status">
+                    <div class="timer" id="timerDisplay">01:30</div>
+                    <div class="score-display" id="targetDisplay">🎯 Target: 2 points</div>
+                    <div class="lives" id="livesDisplay">❤️ ❤️ ❤️ ❤️ ❤️</div>
+                </div>
+
+                <div class="canvas-area">
+                    <canvas id="gameCanvas" width="500" height="450" style="width:100%; height:auto; max-width:500px; aspect-ratio:500/450"></canvas>
+                </div>
+
+                <div class="goal-hint" id="goalHint">
+                    ⭐ Goal: Add 2 points on the circle, then click Verify!
+                </div>
+
+                <div class="toolbar">
+                    <button class="tool-btn" data-tool="point">📍 Point</button>
+                    <button class="tool-btn" data-tool="line">📏 Line</button>
+                    <button class="tool-btn" data-tool="clear">🧹 Clear</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="primary-btn" id="submitBtn">✨ Verify ✨</button>
+                    <button class="primary-btn" id="resetBtn" style="background: var(--danger);">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- 右侧：AI对话助手 -->
+            <div class="right-panel">
+                <h4>🤖 AI Geometry Assistant</h4>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message ai">
+                        👋 Hi! I'm your AI tutor. Ask me anything about circle theorems, or ask for a hint!
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your question...">
+                    <button class="chat-send" id="chatSendBtn">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 胜利模态框 -->
+    <div class="modal" id="victoryModal">
+        <div class="modal-content">
+            <div style="font-size: 48px;">🏆</div>
+            <h2>Challenge Complete!</h2>
+            <p id="modalMessage">Perfect! +100 points</p>
+            <button class="primary-btn" id="nextBtn" style="margin-top: 16px;">Next Challenge →</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== 语言包 ==========
+        const translations = {
+            en: {
+                theorems: [
+                    "Central Angle Theorem",
+                    "Inscribed Angle Theorem",
+                    "Thales' Theorem",
+                    "Tangent Theorem",
+                    "Tangent-Chord Theorem",
+                    "Intersecting Chords Theorem",
+                    "Secant-Tangent Theorem",
+                    "Power of a Point"
+                ],
+                hints: [
+                    "Add 2 points on the circle, connect to center",
+                    "Add 3 points on the circle, vertex on circle",
+                    "Draw a diameter, add a point on the circle",
+                    "Add a point on the circle, draw a line perpendicular to the radius",
+                    "Draw a tangent and a chord",
+                    "Draw two intersecting chords inside the circle",
+                    "Draw a tangent and a secant from an external point",
+                    "Draw a point outside the circle, connect to center"
+                ],
+                formulas: [
+                    "∠AOB = measure of arc AB",
+                    "∠ACB = ½ × arc AB",
+                    "Angle in semicircle = 90°",
+                    "Tangent ⟂ Radius",
+                    "Tangent-chord angle = inscribed angle",
+                    "PA × PB = PC × PD",
+                    "PT² = PA × PB",
+                    "Power = OP² - R²"
+                ],
+                goal: "⭐ Goal: {hint}",
+                correct: "✓ Correct! +{score} points",
+                wrong: "✗ Wrong! Need {need} more points",
+                gameWin: "🎉 Congratulations! You completed all challenges! 🎉",
+                target: "Target",
+                perfectBonus: "✨ Perfect bonus! +50 points",
+                timeBonus: "⏰ Time bonus! +{bonus} points",
+                comboBonus: "🔥 Combo bonus! +{bonus} points"
+            },
+            zh: {
+                theorems: [
+                    "圆心角定理",
+                    "圆周角定理",
+                    "直径定理",
+                    "切线定理",
+                    "弦切角定理",
+                    "相交弦定理",
+                    "切割线定理",
+                    "圆幂定理"
+                ],
+                hints: [
+                    "在圆上添加2个点，连接圆心",
+                    "在圆上添加3个点，顶点在圆上",
+                    "画一条直径，在圆上添加一个点",
+                    "在圆上添加点，画垂直于半径的线",
+                    "画一条切线和一条弦",
+                    "画两条相交于圆内的弦",
+                    "从圆外一点画切线和割线",
+                    "在圆外画一点，连接圆心"
+                ],
+                formulas: [
+                    "∠AOB = 弧AB度数",
+                    "∠ACB = ½ × 弧AB",
+                    "直径所对圆周角 = 90°",
+                    "切线 ⊥ 半径",
+                    "弦切角 = 圆周角",
+                    "PA×PB = PC×PD",
+                    "PT² = PA×PB",
+                    "圆幂 = OP² - R²"
+                ],
+                goal: "⭐ 目标：{hint}",
+                correct: "✓ 正确！+{score}分",
+                wrong: "✗ 错误！还需要{need}个点",
+                gameWin: "🎉 恭喜完成所有挑战！🎉",
+                target: "目标",
+                perfectBonus: "✨ 完美加成！+50分",
+                timeBonus: "⏰ 时间加成！+{bonus}分",
+                comboBonus: "🔥 连击加成！+{bonus}分"
+            }
+        };
+
+        // 挑战数据（8个定理，难度递进）
+        const challenges = [
+            { nameKey: 0, hintKey: 0, formulaKey: 0, targetPoints: 2, needLine: false, timeLimit: 90, baseScore: 100 },
+            { nameKey: 1, hintKey: 1, formulaKey: 1, targetPoints: 3, needLine: false, timeLimit: 80, baseScore: 110 },
+            { nameKey: 2, hintKey: 2, formulaKey: 2, targetPoints: 2, needLine: true, timeLimit: 75, baseScore: 120 },
+            { nameKey: 3, hintKey: 3, formulaKey: 3, targetPoints: 1, needLine: true, timeLimit: 70, baseScore: 130 },
+            { nameKey: 4, hintKey: 4, formulaKey: 4, targetPoints: 2, needLine: true, timeLimit: 65, baseScore: 140 },
+            { nameKey: 5, hintKey: 5, formulaKey: 5, targetPoints: 2, needLine: true, timeLimit: 60, baseScore: 150 },
+            { nameKey: 6, hintKey: 6, formulaKey: 6, targetPoints: 2, needLine: true, timeLimit: 55, baseScore: 160 },
+            { nameKey: 7, hintKey: 7, formulaKey: 7, targetPoints: 1, needLine: false, timeLimit: 50, baseScore: 200 }
+        ];
+
+        // 游戏状态
+        let currentLang = 'en';
+        let currentTheme = 'dark';
+        let currentChallenge = 0;
+        let score = 0;
+        let highScore = 0;
+        let streak = 0;
+        let lives = 5;
+        let timeLeft = 90;
+        let timerInterval = null;
+        let gameActive = true;
+        let completedChallenges = [];
+        
+        let canvas, ctx;
+        let centerX, centerY, radius;
+        let points = [];
+        let lines = [];
+        let currentTool = 'point';
+        let tempLineStart = null;
+
+        // 辅助函数
+        function t(key, ...args) {
+            let text = translations[currentLang][key] || key;
+            if (args.length && typeof text === 'string') {
+                for (let i = 0; i < args.length; i++) {
+                    text = text.replace(`{${i === 0 ? 'score' : i === 1 ? 'bonus' : 'need'}}`, args[i]);
+                }
+            }
+            return text;
+        }
+
+        function getCurrentHint() {
+            const idx = challenges[currentChallenge].hintKey;
+            return translations[currentLang].hints[idx];
+        }
+
+        function getCurrentFormula() {
+            const idx = challenges[currentChallenge].formulaKey;
+            return translations[currentLang].formulas[idx];
+        }
+
+        function getCurrentTheoremName() {
+            const idx = challenges[currentChallenge].nameKey;
+            return translations[currentLang].theorems[idx];
+        }
+
+        function getCurrentTargetPoints() {
+            return challenges[currentChallenge].targetPoints;
+        }
+
+        function getCurrentNeedLine() {
+            return challenges[currentChallenge].needLine;
+        }
+
+        function getCurrentBaseScore() {
+            return challenges[currentChallenge].baseScore;
+        }
+
+        function getCurrentTimeLimit() {
+            return challenges[currentChallenge].timeLimit;
+        }
+
+        // 初始化
+        function init() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = 500;
+            canvas.height = 450;
+            centerX = canvas.width / 2;
+            centerY = canvas.height / 2;
+            radius = 150;
+            
+            loadSavedData();
+            renderTheoremGrid();
+            setupEventListeners();
+            drawBaseCircle();
+            loadSavedSettings();
+            updateUI();
+            startTimer();
+        }
+
+        function loadSavedData() {
+            const savedScore = localStorage.getItem('geo_v3_score');
+            if (savedScore) score = parseInt(savedScore);
+            const savedHigh = localStorage.getItem('geo_v3_highscore');
+            if (savedHigh) highScore = parseInt(savedHigh);
+            const savedCompleted = localStorage.getItem('geo_v3_completed');
+            if (savedCompleted) completedChallenges = JSON.parse(savedCompleted);
+            const savedStreak = localStorage.getItem('geo_v3_streak');
+            if (savedStreak) streak = parseInt(savedStreak);
+        }
+
+        function saveProgress() {
+            localStorage.setItem('geo_v3_score', score);
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('geo_v3_highscore', highScore);
+            }
+            localStorage.setItem('geo_v3_completed', JSON.stringify(completedChallenges));
+            localStorage.setItem('geo_v3_streak', streak);
+        }
+
+        function resetAllProgress() {
+            if (confirm(currentLang === 'en' ? 'Reset all progress? Your score and completed challenges will be lost.' : '重置所有进度？分数和已完成挑战将丢失。')) {
+                score = 0;
+                highScore = 0;
+                streak = 0;
+                completedChallenges = [];
+                currentChallenge = 0;
+                saveProgress();
+                resetChallenge();
+                renderTheoremGrid();
+                updateUI();
+                showToast(currentLang === 'en' ? 'Progress reset!' : '进度已重置', 'info');
+            }
+        }
+
+        function renderTheoremGrid() {
+            const grid = document.getElementById('theoremGrid');
+            grid.innerHTML = '';
+            translations[currentLang].theorems.forEach((name, idx) => {
+                const card = document.createElement('div');
+                card.className = `theorem-card ${currentChallenge === idx ? 'active' : ''} ${completedChallenges.includes(idx) ? 'completed' : ''}`;
+                card.innerHTML = `
+                    <div class="theorem-name">${name}</div>
+                    <div class="theorem-desc">${translations[currentLang].hints[idx].substring(0, 30)}...</div>
+                `;
+                card.onclick = () => {
+                    if (!gameActive && currentChallenge !== idx) {
+                        showToast(currentLang === 'en' ? 'Game over! Click Reset to continue.' : '游戏结束！点击重置继续。', 'error');
+                        return;
+                    }
+                    currentChallenge = idx;
+                    resetChallenge();
+                    renderTheoremGrid();
+                    updateUI();
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTool = btn.dataset.tool;
+                });
+            });
+            
+            canvas.addEventListener('click', handleCanvasClick);
+            document.getElementById('submitBtn').addEventListener('click', submitConstruction);
+            document.getElementById('resetBtn').addEventListener('click', () => resetChallenge());
+            document.getElementById('nextBtn').addEventListener('click', nextChallenge);
+            document.getElementById('resetProgressBtn').addEventListener('click', resetAllProgress);
+            
+            document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+            document.getElementById('langToggleBtn').addEventListener('click', toggleLang);
+            
+            // AI 聊天
+            document.getElementById('chatSendBtn').addEventListener('click', sendAIMessage);
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendAIMessage();
+            });
+        }
+
+        function handleCanvasClick(e) {
+            if (!gameActive) {
+                showToast(currentLang === 'en' ? 'Game over! Click Reset to continue.' : '游戏结束！点击重置继续。', 'error');
+                return;
+            }
+            
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            
+            switch(currentTool) {
+                case 'point':
+                    const distToCenter = Math.hypot(x - centerX, y - centerY);
+                    if (distToCenter <= radius + 20) {
+                        const label = String.fromCharCode(65 + points.length % 26);
+                        points.push({ x, y, label });
+                        drawBaseCircle();
+                        checkAutoComplete();
+                    } else {
+                        canvas.classList.add('shake');
+                        setTimeout(() => canvas.classList.remove('shake'), 300);
+                        showToast(currentLang === 'en' ? 'Click on or inside the circle!' : '请点击圆上或圆内！', 'error');
+                    }
+                    break;
+                case 'line':
+                    if (tempLineStart) {
+                        lines.push({ x1: tempLineStart.x, y1: tempLineStart.y, x2: x, y2: y });
+                        tempLineStart = null;
+                        drawBaseCircle();
+                        checkAutoComplete();
+                    } else {
+                        tempLineStart = { x, y };
+                        showToast(currentLang === 'en' ? 'Click second point' : '点击第二个点', 'info');
+                    }
+                    break;
+                case 'clear':
+                    points = [];
+                    lines = [];
+                    tempLineStart = null;
+                    drawBaseCircle();
+                    showToast(currentLang === 'en' ? 'Canvas cleared' : '画布已清空', 'info');
+                    break;
+            }
+        }
+
+        function checkAutoComplete() {
+            const targetPoints = getCurrentTargetPoints();
+            const needLine = getCurrentNeedLine();
+            if (points.length >= targetPoints && (!needLine || lines.length >= 1)) {
+                submitConstruction();
+            }
+        }
+
+        function submitConstruction() {
+            if (!gameActive) return;
+            
+            const targetPoints = getCurrentTargetPoints();
+            const needLine = getCurrentNeedLine();
+            let isValid = points.length >= targetPoints && (!needLine || lines.length >= 1);
+            
+            if (isValid) {
+                // 计算得分加成
+                const baseScore = getCurrentBaseScore();
+                const timeBonus = Math.floor(timeLeft / 10) * 10;
+                const comboBonus = streak * 20;
+                let addScore = baseScore + timeBonus + comboBonus;
+                
+                // 完美加成（如果一次成功且点数恰好等于目标）
+                if (points.length === targetPoints && lines.length === (needLine ? 1 : 0)) {
+                    addScore += 50;
+                    showToast(t('perfectBonus'), 'success');
+                }
+                if (timeBonus > 0) showToast(t('timeBonus', timeBonus), 'info');
+                if (comboBonus > 0) showToast(t('comboBonus', comboBonus), 'info');
+                
+                score += addScore;
+                streak++;
+                saveProgress();
+                
+                if (!completedChallenges.includes(currentChallenge)) {
+                    completedChallenges.push(currentChallenge);
+                    saveProgress();
+                }
+                
+                updateUI();
+                showToast(t('correct', addScore), 'success');
+                
+                canvas.classList.add('celebrate');
+                setTimeout(() => canvas.classList.remove('celebrate'), 500);
+                
+                if (completedChallenges.length === challenges.length) {
+                    showToast(t('gameWin'), 'success');
+                    gameActive = false;
+                    if (timerInterval) clearInterval(timerInterval);
+                } else if (currentChallenge < challenges.length - 1) {
+                    document.getElementById('victoryModal').classList.add('active');
+                }
+            } else {
+                streak = 0;
+                lives--;
+                saveProgress();
+                updateUI();
+                
+                canvas.classList.add('shake');
+                setTimeout(() => canvas.classList.remove('shake'), 300);
+                
+                const need = targetPoints - points.length;
+                showToast(t('wrong', need), 'error');
+                
+                if (lives <= 0) {
+                    gameActive = false;
+                    showToast(currentLang === 'en' ? 'Game Over! Click Reset Progress to start over.' : '游戏结束！点击重置进度重新开始。', 'error');
+                    if (timerInterval) clearInterval(timerInterval);
+                }
+            }
+        }
+
+        function nextChallenge() {
+            document.getElementById('victoryModal').classList.remove('active');
+            if (currentChallenge < challenges.length - 1) {
+                currentChallenge++;
+                resetChallenge();
+                renderTheoremGrid();
+            }
+        }
+
+        function resetChallenge() {
+            points = [];
+            lines = [];
+            tempLineStart = null;
+            gameActive = true;
+            lives = 5;
+            streak = 0;
+            timeLeft = getCurrentTimeLimit();
+            if (timerInterval) clearInterval(timerInterval);
+            startTimer();
+            drawBaseCircle();
+            updateUI();
+        }
+
+        function drawBaseCircle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.save();
+            ctx.strokeStyle = 'rgba(100,100,100,0.2)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < canvas.width; i += 30) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#3b82f6';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+            ctx.fillStyle = '#ef4444';
+            ctx.fill();
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary') || '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('O', centerX + 8, centerY - 5);
+            
+            ctx.restore();
+            
+            points.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#3b82f6';
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 10px Arial';
+                ctx.fillText(point.label, point.x - 3, point.y - 5);
+            });
+            
+            lines.forEach(line => {
+                ctx.beginPath();
+                ctx.moveTo(line.x1, line.y1);
+                ctx.lineTo(line.x2, line.y2);
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!gameActive) return;
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timerInterval);
+                    showToast(currentLang === 'en' ? "Time's up! Game Over" : "时间到！游戏结束", 'error');
+                } else {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    const timerDisplay = document.getElementById('timerDisplay');
+                    timerDisplay.textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                    if (timeLeft <= 10) timerDisplay.classList.add('warning');
+                    else timerDisplay.classList.remove('warning');
+                }
+            }, 1000);
+        }
+
+        function updateUI() {
+            const targetPoints = getCurrentTargetPoints();
+            const needLine = getCurrentNeedLine();
+            const targetText = `${t('target')}: ${targetPoints}${needLine ? ' + line' : ''}`;
+            document.getElementById('targetDisplay').innerHTML = `🎯 ${targetText}`;
+            document.getElementById('scoreValue').textContent = score;
+            document.getElementById('streakValue').textContent = streak;
+            document.getElementById('highScoreValue').textContent = highScore;
+            document.getElementById('completedValue').textContent = completedChallenges.length;
+            
+            const livesDisplay = document.getElementById('livesDisplay');
+            let hearts = '';
+            for (let i = 0; i < 5; i++) {
+                hearts += i < lives ? '❤️ ' : '🖤 ';
+            }
+            livesDisplay.innerHTML = hearts;
+            
+            document.getElementById('levelBadge').innerHTML = `🎯 Challenge ${currentChallenge + 1}/${challenges.length}`;
+            document.getElementById('challengeTitle').textContent = getCurrentTheoremName();
+            document.getElementById('goalHint').innerHTML = t('goal', getCurrentHint());
+        }
+
+        function showToast(msg, type) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#f59e0b'};
+                color: white;
+                padding: 10px 20px;
+                border-radius: 40px;
+                font-weight: 600;
+                z-index: 2000;
+                font-size: 0.85rem;
+                animation: fadeInUp 0.3s ease;
+            `;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        // AI 响应生成（智能模拟）
+        function sendAIMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatDiv = document.getElementById('chatMessages');
+            chatDiv.innerHTML += `<div class="chat-message user">${escapeHtml(message)}</div>`;
+            input.value = '';
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            setTimeout(() => {
+                const reply = generateAIResponse(message);
+                chatDiv.innerHTML += `<div class="chat-message ai">${reply}</div>`;
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }, 500);
+        }
+
+        function generateAIResponse(question) {
+            const q = question.toLowerCase();
+            const theoremName = getCurrentTheoremName();
+            const hint = getCurrentHint();
+            const formula = getCurrentFormula();
+            
+            if (q.includes('hint') || q.includes('tip') || q.includes('how') || q.includes('怎么做')) {
+                return `💡 ${hint}<br>📐 Formula: ${formula}`;
+            }
+            if (q.includes('formula') || q.includes('公式')) {
+                return `📐 ${formula}`;
+            }
+            if (q.includes('central angle') || q.includes('圆心角')) {
+                return `Central Angle Theorem: The angle subtended by an arc at the center is twice the angle subtended at any point on the remaining part of the circle. In symbols: ∠AOB = 2∠ACB. Try adding two points on the circle and connecting them to the center!`;
+            }
+            if (q.includes('inscribed angle') || q.includes('圆周角')) {
+                return `Inscribed Angle Theorem: The angle subtended by an arc at any point on the circle is half the measure of the arc. ∠ACB = ½ × arc AB. Add three points on the circle with the vertex on the circumference.`;
+            }
+            if (q.includes('thales') || q.includes('直径')) {
+                return `Thales' Theorem: An angle inscribed in a semicircle is a right angle (90°). Draw a diameter and pick any point on the circle to form a right triangle.`;
+            }
+            if (q.includes('tangent') || q.includes('切线')) {
+                return `Tangent Theorem: The tangent to a circle is perpendicular to the radius at the point of tangency. Draw a point on the circle, then draw a line perpendicular to the radius.`;
+            }
+            if (q.includes('error') || q.includes('wrong') || q.includes('为什么错')) {
+                const target = getCurrentTargetPoints();
+                const needLine = getCurrentNeedLine();
+                let suggestion = `You have ${points.length} point(s) and ${lines.length} line(s). `;
+                if (points.length < target) suggestion += `You need ${target - points.length} more point(s). `;
+                if (needLine && lines.length === 0) suggestion += `You also need to draw a line. `;
+                suggestion += `Try following the hint: ${hint}`;
+                return suggestion;
+            }
+            return `🤔 I'm here to help with circle theorems! Current challenge: ${theoremName}. ${hint}. Ask me for a hint or formula.`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            document.getElementById('themeToggleBtn').innerHTML = currentTheme === 'dark' ? '🌙 Dark' : '☀️ Light';
+            localStorage.setItem('geo_v3_theme', currentTheme);
+            drawBaseCircle();
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            document.getElementById('langToggleBtn').innerHTML = currentLang === 'en' ? '🌐 中文' : '🌐 English';
+            renderTheoremGrid();
+            updateUI();
+            drawBaseCircle();
+            // 更新 AI 欢迎消息
+            const welcomeMsg = currentLang === 'en' 
+                ? '👋 Hi! I\'m your AI tutor. Ask me anything about circle theorems, or ask for a hint!'
+                : '👋 你好！我是你的AI导师。问我任何关于圆定理的问题，或者请求提示！';
+            document.getElementById('chatMessages').innerHTML = `<div class="chat-message ai">${welcomeMsg}</div>`;
+        }
+
+        function loadSavedSettings() {
+            const savedTheme = localStorage.getItem('geo_v3_theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                document.getElementById('themeToggleBtn').innerHTML = currentTheme === 'dark' ? '🌙 Dark' : '☀️ Light';
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
