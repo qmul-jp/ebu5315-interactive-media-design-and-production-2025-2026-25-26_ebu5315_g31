@@ -1,8 +1,12 @@
 EBU5315
 Group Number: 2526EBU5315G31 小组编号：2526EBU5315G31
+
 Project Title: CircleMaster 项目标题：CircleMaster
+
 Members:Wang Ciyue ,Ye Tong,Jia Yuehan  成员：王慈悦，叶彤，贾月涵
+
 Name, BUPT Student Number, QM Student Number, Email
+
 王慈悦 2024213552 241118500 rainsing1005@qq.com
 
 叶彤 2024213578 241117972 jp2024213578@qmul.ac.uk
