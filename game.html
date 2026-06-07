@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A high-interaction circle theorem mission arcade with precise construction validation.">
+  <title>Mission Arcade | CircleMaster</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="game">
+  <a class="skip-link" href="#main-content" data-i18n="skip">Skip to main content</a>
+  <div class="access-bar">
+    <div class="shell access-inner">
+      <span class="access-label" data-i18n="accessibility">Accessibility</span>
+      <div class="access-actions">
+        <button type="button" class="icon-control" data-font="down">A-</button>
+        <button type="button" class="icon-control" data-font="reset">A</button>
+        <button type="button" class="icon-control" data-font="up">A+</button>
+        <button type="button" class="icon-control" id="themeToggle" data-i18n="darkMode">Dark mode</button>
+        <button type="button" class="icon-control" id="contrastToggle" data-i18n="contrast">High contrast</button>
+        <button type="button" class="icon-control" id="calmToggle" data-i18n="calmMode">Calm mode</button>
+        <button type="button" class="icon-control" id="colorblindToggle" data-i18n="colorblindMode">Color-blind mode</button>
+        <label class="language-control"><span data-i18n="languageLabel">Language</span>
+          <select id="languageSelect" aria-label="Language">
+            <option value="en">English</option><option value="zh">中文</option><option value="ko">한국어</option>
+            <option value="ja">日本語</option><option value="de">Deutsch</option><option value="ru">Русский</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="shell nav-wrap">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><span></span></span><span>CircleMaster</span></a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav"><span data-i18n="menu">Menu</span></button>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html" data-i18n="navHome">Home</a>
+        <a class="active" href="game.html" data-i18n="navGame">Construction Lab</a>
+        <a href="quiz.html" data-i18n="navQuiz">Quiz Studio</a>
+        <a class="nav-cta" href="index.html#contact" data-i18n="navContact">Contact</a>
+        <button type="button" class="nav-auth" id="authButton" data-i18n="loginRegister">Login / Register</button>
+      </nav>
+    </div>
+  </header>
+  <div class="breadcrumb-row">
+    <nav class="shell breadcrumb"><a href="index.html" data-i18n="navHome">Home</a><span>/</span><span aria-current="page" data-i18n="gameCrumb">Mission Arcade</span></nav>
+  </div>
+
+  <main id="main-content" class="section lab-section">
+    <div class="shell">
+      <div class="page-intro">
+        <div>
+          <p class="eyebrow" id="gameEyebrow">Interactive geometry mission arcade</p>
+          <h1 id="gamePageTitle">Place. Drag. Measure. Master.</h1>
+        </div>
+        <p id="gamePageIntro">Complete 12 visual missions. Lines are built automatically from your points, while the geometry engine checks the actual relationships.</p>
+      </div>
+
+      <div class="care-banner">
+        <span class="care-mark" aria-hidden="true">∞</span>
+        <div><strong id="gameCareTitle">A patient space for precise thinking</strong><p id="gameCareBody">No countdown and no limited lives. Every point can be moved, every mission can be retried, and hints never block progress.</p></div>
+      </div>
+
+      <section class="game-dashboard">
+        <div><span id="dashboardXpLabel">Total XP</span><strong id="totalXp">0</strong></div>
+        <div><span id="dashboardStarsLabel">Stars</span><strong id="totalStars">0 / 36</strong></div>
+        <div><span id="dashboardCompleteLabel">Missions</span><strong id="missionComplete">0 / 12</strong></div>
+        <div><span id="dashboardBestLabel">Best precision</span><strong id="bestPrecision">—</strong></div>
+      </section>
+
+      <div class="arcade-layout">
+        <aside class="mission-browser">
+          <div class="panel-heading"><span id="missionPathLabel">Mission path</span><button type="button" class="mini-action" id="resetProgress">Reset</button></div>
+          <div class="mission-filters" id="missionFilters"></div>
+          <div class="mission-list" id="missionList"></div>
+        </aside>
+
+        <section class="mission-stage">
+          <div class="stage-header">
+            <div>
+              <span class="challenge-chip" id="missionMeta"></span>
+              <h2 id="missionTitle"></h2>
+              <p id="missionBrief"></p>
+            </div>
+            <div class="mission-stars" id="missionStars" aria-label="Mission stars">☆☆☆</div>
+          </div>
+
+          <div class="placement-guide">
+            <div><span id="nextActionLabel">Next action</span><strong id="nextAction"></strong></div>
+            <div class="point-slots" id="pointSlots"></div>
+          </div>
+
+          <div class="game-canvas-wrap arcade-canvas-wrap">
+            <canvas id="gameCanvas" width="820" height="620" aria-label="Interactive circle construction canvas"></canvas>
+            <div class="canvas-help" id="canvasHelp" aria-live="polite"></div>
+          </div>
+
+          <div class="stage-actions">
+            <button type="button" class="button secondary" id="undoPoint">Undo point</button>
+            <button type="button" class="button secondary" id="clearMission">Clear construction</button>
+            <button type="button" class="button secondary" id="showGhost">Show target guide</button>
+            <button type="button" class="button primary" id="validateMission">Validate mission</button>
+          </div>
+
+          <div class="feedback-panel neutral" id="missionFeedback" aria-live="polite"></div>
+        </section>
+
+        <aside class="mission-inspector">
+          <div class="panel-heading"><span id="liveMeasureLabel">Live geometry</span></div>
+          <div class="measure-grid" id="measureGrid"></div>
+          <div class="concept-card">
+            <span id="conceptLabel">Concept card</span>
+            <h3 id="conceptTitle"></h3>
+            <p id="conceptBody"></p>
+          </div>
+          <button type="button" class="hint-card" id="hintButton">
+            <strong id="hintTitle">Need a strategic hint?</strong>
+            <span id="hintCost">Hints reduce the XP bonus, but never block progress.</span>
+          </button>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div><a class="brand footer-brand" href="index.html"><span class="brand-mark"><span></span></span><span>CircleMaster</span></a><p data-i18n="footerLine">Inclusive, multilingual, stand-alone geometry learning.</p></div>
+      <div class="footer-links"><a href="index.html" data-i18n="navHome">Home</a><a href="quiz.html" data-i18n="navQuiz">Quiz Studio</a><a href="index.html#contact" data-i18n="navContact">Contact</a></div>
+      <p class="footer-note" data-i18n="footerNote">Built for learning. No personal data leaves this device.</p>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="locales.js"></script>
+  <script src="app.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
